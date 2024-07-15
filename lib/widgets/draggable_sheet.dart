@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'bottom_fixed_widget.dart';
+
 class MyDraggableSheet extends StatefulWidget {
   final Widget child;
   const MyDraggableSheet({super.key, required this.child});
@@ -28,6 +30,8 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
   void anchor() => animateSheet(getSheet.snapSizes!.last);
 
   void expand() => animateSheet(getSheet.maxChildSize);
+
+  void hide() => animateSheet(getSheet.minChildSize);
 
   void animateSheet(double size) {
     controller.animateTo(
@@ -64,12 +68,45 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
                 topRight: Radius.circular(22),
               ),
             ),
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                topButtonIndicator(),
-                SliverToBoxAdapter(
-                  child: widget.child,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onVerticalDragUpdate: (details) {
+                    if (details.primaryDelta! < 0) {
+                      expand();
+                    } else if (details.primaryDelta! > 0) {
+                      collapse();
+                    }
+                  },
+                  child: topButtonIndicator(),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    'Collection',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                const Divider(
+                  color: Colors.grey,
+                  height: 1.0,
+                  thickness: 0.3,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: Container(
+                      color: Colors.grey.shade100,
+                      padding: const EdgeInsets.only(bottom: BottomFixedWidget.height),
+                      child: widget.child,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -79,27 +116,28 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
     });
   }
 
-  SliverToBoxAdapter topButtonIndicator() {
-    return SliverToBoxAdapter(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Center(
-                child: Wrap(children: <Widget>[
-                  Container(
-                      width: 30,
-                      margin: const EdgeInsets.only(
-                          top: 10, bottom: 10),
-                      height: 5,
-                      decoration: const BoxDecoration(
-                        color: Colors.black12,
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(8.0)),
-                      )),
-                ])),
-          ]),
+  Widget topButtonIndicator() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Center(
+          child: Wrap(
+            children: <Widget>[
+              Container(
+                width: 40,
+                margin: const EdgeInsets.only(top: 20, bottom: 10),
+                height: 5,
+                decoration: const BoxDecoration(
+                  color: Colors.black12,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

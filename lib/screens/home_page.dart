@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_card_collector/widgets/bottom_fixed_widget.dart';
 import 'package:pokemon_card_collector/widgets/card_collection_container.dart';
 import 'package:pokemon_card_collector/widgets/draggable_sheet.dart';
 
@@ -27,15 +28,26 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.grey,
-      body: const MyDraggableSheet(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CardCollectionContainer(totCost: 250.12),
-            CardCollectionContainer(totCost: 250.12),
-          ]
-        ),
+      body: const Stack(
+        children: [
+          MyDraggableSheet(
+            child: Column(
+              children: [
+                CardCollectionContainer(totCost: 250.12),
+                CardCollectionContainer(totCost: 250.12),
+                CardCollectionContainer(totCost: 250.12),
+                CardCollectionContainer(totCost: 250.12),
+                CardCollectionContainer(totCost: 250.12),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: BottomFixedWidget(),
+          ),
+        ],
       ),
     );
   }

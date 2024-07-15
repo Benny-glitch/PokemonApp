@@ -8,9 +8,7 @@ class CardImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8.0),
-      width: 100.0,
+    return SizedBox(
       child: Stack(
         children: [
           ClipRRect(

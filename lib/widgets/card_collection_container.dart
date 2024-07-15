@@ -10,11 +10,11 @@ class CardCollectionContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.only(left: 20.0,right: 20.0,top: 16.0,bottom: 0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(16.0),
         boxShadow: const [
           BoxShadow(
             color: Colors.black12,
@@ -54,25 +54,24 @@ class CardCollectionContainer extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                  color: Colors.black,
                 ),
               ),
             ],
           ),
-          const Divider(thickness: 0.5),
+          const Divider(thickness: 0.3),
           const SizedBox(height: 16.0),
-          SizedBox(
-            height: 130.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: const [
+          const SizedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
                 CardImage(
-                  imageUrl: 'assets/moltres_v.jpg',
-                  count: 5,
+                  imageUrl: 'assets/zapdos_v.jpg',
+                  count: 15,
                 ),
                 CardImage(
-                  imageUrl: 'assets/arceus_v.jpg',
-                  count: 2,
+                  imageUrl: 'assets/zapdos_v.jpg',
+                  count: 6,
                 ),
                 CardImage(
                   imageUrl: 'assets/zapdos_v.jpg',
@@ -87,7 +86,7 @@ class CardCollectionContainer extends StatelessWidget {
               // Aggiungi la logica per il pulsante "Add cards"
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.purple.shade900, // Arancione chiaro
+              backgroundColor: Colors.deepOrange.shade50, // Arancione chiaro
               minimumSize: const Size.fromHeight(50),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),

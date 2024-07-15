@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pokemon_card_collector/home_page.dart';
+import 'package:pokemon_card_collector/screens/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'PokeDesk App',
+      title: 'Pokedesk App',
       theme: ThemeData(
         useMaterial3: true,
         primarySwatch: Colors.blue,
