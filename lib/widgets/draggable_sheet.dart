@@ -87,7 +87,7 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
                   child: Text(
                     'Collection',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
@@ -102,8 +102,9 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
                   child: SingleChildScrollView(
                     controller: scrollController,
                     child: Container(
-                      color: Colors.grey.shade100,
-                      padding: const EdgeInsets.only(bottom: BottomFixedWidget.height),
+                      color: Colors.grey.shade50,
+                      padding: const EdgeInsets.only(
+                          bottom: BottomFixedWidget.height),
                       child: widget.child,
                     ),
                   ),
