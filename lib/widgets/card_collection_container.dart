@@ -10,7 +10,8 @@ class CardCollectionContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 20.0,right: 20.0,top: 16.0,bottom: 0),
+      margin:
+          const EdgeInsets.only(left: 20.0, right: 20.0, top: 16.0, bottom: 0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -31,23 +32,22 @@ class CardCollectionContainer extends StatelessWidget {
             children: [
               const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'V & Vstar group',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  children: [
+                    Text(
+                      'V & Vstar group',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '20 ITEMS',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
+                    Text(
+                      '20 ITEMS',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
-                ]
-              ),
+                  ]),
               Text(
                 'Total value\n \$ $totCost',
                 textAlign: TextAlign.right,
@@ -81,24 +81,51 @@ class CardCollectionContainer extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16.0),
-          TextButton(
-            onPressed: () {
-              // Aggiungi la logica per il pulsante "Add cards"
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepOrange.shade50, // Arancione chiaro
-              minimumSize: const Size.fromHeight(50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+          Row(
+            children: [
+              Expanded(
+                flex: 8,
+                child: TextButton(
+                  onPressed: () {
+                    // Add the logic
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange.shade50,
+                    minimumSize: const Size.fromHeight(50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'Add cards',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.deepOrange,
+                    ),
+                  ),
+                ),
               ),
-            ),
-            child: const Text(
-              'Add cards',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.deepOrange,
+              const SizedBox(width: 8.0),
+              Expanded(
+                flex: 2,
+                child: OutlinedButton(
+                    onPressed: () {
+                      // Add the logic
+                    },
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.grey.shade50,
+                      minimumSize: const Size.fromHeight(50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      side: BorderSide(width: 1, color: Colors.grey.shade100),
+                    ),
+                    child: const Icon(
+                      Icons.more_horiz,
+                      color: Colors.black,
+                    )),
               ),
-            ),
+            ],
           ),
         ],
       ),
