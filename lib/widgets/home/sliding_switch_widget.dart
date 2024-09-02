@@ -20,7 +20,7 @@ class SlidingSwitch extends StatefulWidget {
   final Function onDoubleTap;
   final Function onSwipe;
 
-  const SlidingSwitch({
+  const SlidingSwitch({super.key,
     required this.value,
     required this.onChanged,
     this.height = 55,
@@ -79,7 +79,6 @@ class _SlidingSwitch extends State<SlidingSwitch> with SingleTickerProviderState
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Use maximum available width from parent
         double dynamicWidth = constraints.maxWidth;
 
         return GestureDetector(
@@ -93,7 +92,7 @@ class _SlidingSwitch extends State<SlidingSwitch> with SingleTickerProviderState
           },
           child: Container(
             height: widget.height + 10,
-            width: dynamicWidth, // Set width dynamically
+            width: dynamicWidth,
             decoration: BoxDecoration(
               color: widget.background,
               borderRadius: BorderRadius.circular(10.0),

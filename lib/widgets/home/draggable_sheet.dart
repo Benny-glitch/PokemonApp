@@ -72,22 +72,13 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onVerticalDragUpdate: (details) {
-                    if (details.primaryDelta! < 0) {
-                      expand();
-                    } else if (details.primaryDelta! > 0) {
-                      collapse();
-                    }
-                  },
-                  child: topButtonIndicator(),
-                ),
+                topButtonIndicator(),
                 const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Text(
                     'Collection',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
@@ -104,7 +95,8 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
                     child: Container(
                       color: Colors.grey.shade50,
                       padding: const EdgeInsets.only(
-                          bottom: BottomFixedWidget.height),
+                          bottom: BottomFixedWidget.height
+                      ),
                       child: widget.child,
                     ),
                   ),

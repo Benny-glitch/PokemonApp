@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'card_image.dart';
 
 class CardCollectionContainer extends StatelessWidget {
@@ -11,7 +10,7 @@ class CardCollectionContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin:
-          const EdgeInsets.only(left: 20.0, right: 20.0, top: 16.0, bottom: 0),
+          const EdgeInsets.only(left: 25.0, right: 25.0, top: 18.0, bottom: 0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -61,25 +60,32 @@ class CardCollectionContainer extends StatelessWidget {
           ),
           const Divider(thickness: 0.3),
           const SizedBox(height: 16.0),
-          const SizedBox(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                CardImage(
-                  imageUrl: 'assets/zapdos_v.jpg',
-                  count: 15,
-                ),
-                CardImage(
-                  imageUrl: 'assets/zapdos_v.jpg',
-                  count: 6,
-                ),
-                CardImage(
-                  imageUrl: 'assets/zapdos_v.jpg',
-                  count: 10,
-                ),
-              ],
-            ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              double width = constraints.maxWidth;
+              int cardCount;
+
+              if (width > 300) {
+                cardCount = 3;
+              } else if (width > 200) {
+                cardCount = 2;
+              } else {
+                cardCount = 1;
+              }
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(cardCount, (index) {
+                  return const Flexible(
+                    child: CardImage(
+                      imageUrl: 'assets/zapdos_v.jpg',
+                      count: 10,
+                    ),
+                  );
+                }),
+              );
+            },
           ),
+
           const SizedBox(height: 16.0),
           Row(
             children: [
@@ -109,21 +115,25 @@ class CardCollectionContainer extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: OutlinedButton(
-                    onPressed: () {
-                      // Add the logic
-                    },
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.grey.shade50,
-                      minimumSize: const Size.fromHeight(50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      side: BorderSide(width: 1, color: Colors.grey.shade100),
+                  onPressed: () {
+                  },
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade50,
+                    minimumSize: const Size.fromHeight(50),
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    child: const Icon(
+                    side: BorderSide(width: 1, color: Colors.grey.shade100),
+                  ),
+                  child: const Center(
+                    child: Icon(
                       Icons.more_horiz,
                       color: Colors.black,
-                    )),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
