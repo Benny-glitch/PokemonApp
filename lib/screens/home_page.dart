@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_card_collector/widgets/bottom_fixed_widget.dart';
-import 'package:pokemon_card_collector/widgets/card_collection_container.dart';
-import 'package:pokemon_card_collector/widgets/draggable_sheet.dart';
+import 'package:pokemon_card_collector/widgets/home/bottom_fixed_widget.dart';
+import 'package:pokemon_card_collector/widgets/home/card_collection_container.dart';
+import 'package:pokemon_card_collector/widgets/home/draggable_sheet.dart';
 
 class HomePage extends StatelessWidget {
   final DraggableScrollableController sheetController =
