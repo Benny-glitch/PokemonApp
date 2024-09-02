@@ -1,0 +1,70 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:pokemon_card_collector/widgets/home/sliding_switch_widget.dart';
+
+class BottomFixedWidget extends StatelessWidget {
+  const BottomFixedWidget({super.key});
+  static const double height = 170;
+
+  @override
+  Widget build(BuildContext context) {
+    bool val = false;
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.19,
+      color: Colors.white,
+      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.0),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  spreadRadius: 0.5,
+                ),
+              ],
+            ),
+            child:
+            const Row(
+            children: [
+              Icon(Icons.folder, color: Colors.orange),
+              SizedBox(width: 8),
+              Text('Create new collection'),
+              Spacer(),
+              Icon(Icons.add, color: Colors.black),
+            ],
+          ),
+          ),
+          const SizedBox(height: 13),
+          SlidingSwitch(
+            value: val,
+            onChanged: (bool onChangeValue) {
+              val = onChangeValue;
+            },
+            height: 45,
+            animationDuration: const Duration(milliseconds: 75),
+            onTap: () {},
+            onDoubleTap: () {},
+            onSwipe: () {},
+            textOff: "Explore",
+            textOn: "Collection",
+            colorOn: const Color(0xffE5622E),
+            colorOff: const Color(0xffE5622E),
+            background: Colors.grey.shade200,
+            buttonColor: Colors.white,
+            inactiveColor: Colors.black38,
+            iconOff: Icons.zoom_in,
+            iconOn: Icons.collections_bookmark,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+
+
