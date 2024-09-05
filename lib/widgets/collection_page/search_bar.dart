@@ -64,7 +64,7 @@ class _AutoCompleteSearchAppState extends State<AutoCompleteSearchApp> {
           return const SizedBox();
         }
         return ListTile(
-          title: Text(suggestion.name),
+          //title: Text(suggestion.name),
         );
       },
       noItemsFoundBuilder: (context) {
@@ -82,7 +82,7 @@ class _AutoCompleteSearchAppState extends State<AutoCompleteSearchApp> {
       ),
       onSuggestionSelected: (PokemonCard? suggestion) {
         if (suggestion != null) {
-          _controller.text = suggestion.name;
+          //_controller.text = suggestion.name;
         }
       },
     );

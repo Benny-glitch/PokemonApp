@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pokemon_card_collector/widgets/home/sliding_switch_widget.dart';
+import 'package:pokemon_card_collector/widgets/home_page/sliding_switch_widget.dart';
 
 class BottomFixedWidget extends StatelessWidget {
   const BottomFixedWidget({super.key});
