@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../../models/card.dart';
-//import '../../services/card_service.dart';
+import '../../services/card_service.dart';
 
 class AutoCompleteSearchApp extends StatefulWidget {
   @override
@@ -11,15 +11,15 @@ class AutoCompleteSearchApp extends StatefulWidget {
 
 class _AutoCompleteSearchAppState extends State<AutoCompleteSearchApp> {
   final TextEditingController _controller = TextEditingController();
-  //final CardService _cardService = CardService();
+  final CardService _cardService = CardService();
   Timer? _debounce;
   bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return TypeAheadField<PokemonCard?>(
+
       textFieldConfiguration: TextFieldConfiguration(
-        autofocus: true,
         controller: _controller,
         decoration: const InputDecoration(
           hintText: 'Search for a card...',
@@ -40,23 +40,15 @@ class _AutoCompleteSearchAppState extends State<AutoCompleteSearchApp> {
 
         final completer = Completer<Iterable<PokemonCard?>>();
 
-        /*_debounce = Timer(const Duration(milliseconds: 300), () async {
+        _debounce = Timer(const Duration(milliseconds: 0), () async {
           List<PokemonCard>? cards = await _cardService.searchCards(pattern);
-
-          final Set<String> seenNames = <String>{};
-          final List<PokemonCard?> uniqueCards = cards
-              .where((card) {
-            final isUnique = seenNames.add(card.name);
-            return isUnique;
-          })
-              .toList();
 
           setState(() {
             _isLoading = false;
           });
 
-          completer.complete(uniqueCards);
-        });*/
+          completer.complete(cards);
+        });
         return completer.future;
       },
       itemBuilder: (context, PokemonCard? suggestion) {
@@ -64,7 +56,7 @@ class _AutoCompleteSearchAppState extends State<AutoCompleteSearchApp> {
           return const SizedBox();
         }
         return ListTile(
-          //title: Text(suggestion.name),
+          title: Text(suggestion.name),
         );
       },
       noItemsFoundBuilder: (context) {
@@ -82,7 +74,7 @@ class _AutoCompleteSearchAppState extends State<AutoCompleteSearchApp> {
       ),
       onSuggestionSelected: (PokemonCard? suggestion) {
         if (suggestion != null) {
-          //_controller.text = suggestion.name;
+          _controller.text = suggestion.name;
         }
       },
     );
