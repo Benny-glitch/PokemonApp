@@ -6,30 +6,35 @@ import '../utils/utils.dart';
 class CardService {
   final Dio _dio = WebUtil.createDio();
   final String _baseUrl = Utils.baseUrl;
-  final String _apiKey = Utils.apiKey;
 
-  Future<PokemonCard?> getPokemonCardByName(String name) async {
+  Future<List<PokemonCard>> searchCards(String name) async {
     try {
       final response = await _dio.get(
         '$_baseUrl/cards',
-        queryParameters: {'q': '!name:$name'},
-        options: Options(headers: {'X-Api-Key': _apiKey}),
+        queryParameters: {'q': 'name:$name*'},
       );
 
       if (response.statusCode == 200) {
         final data = response.data;
 
-        if (data != null && data['data'] != null && data['data'].isNotEmpty) {
-          return PokemonCard.fromJson(data['data'][0]);
+        // Ensure data and data['data'] are not null and are of the correct type
+        if (data != null && data['data'] != null && data['data'] is List) {
+          final List<dynamic> cardsJson = data['data'];
+          // Convert JSON to List of PokemonCard objects, ignoring nulls
+          final List<PokemonCard> cards = cardsJson
+              .map((json) => PokemonCard.fromJson(json as Map<String, dynamic>))
+              .toList();
+          return cards;
         } else {
-          return null;
+          // Return an empty list if data is not in the expected format
+          return [];
         }
       } else {
-        throw Exception('Failed to load card');
+        throw Exception('Failed to load cards: ${response.statusMessage}');
       }
     } catch (e) {
-      return null;
+      print('Error fetching cards: $e');
+      return [];
     }
   }
-
 }

@@ -2,56 +2,50 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'card.g.dart';
 
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
+@JsonSerializable(explicitToJson: true)
 class PokemonCard {
-  final String? id;
-  final String? name;
-  final String? supertype;
+  final String id;
+  final String name;
+  final String supertype;
   final List<String>? subtypes;
-  final String? level;
   final String? hp;
   final List<String>? types;
-  final String? evolvesFrom;
   final List<Ability>? abilities;
   final List<Attack>? attacks;
   final List<Weakness>? weaknesses;
-  final List<Resistance>? resistances;
   final List<String>? retreatCost;
   final int? convertedRetreatCost;
-  final SetDetails? set;
+  final CardSet? set;
   final String? number;
   final String? artist;
   final String? rarity;
-  final String? flavorText;
   final List<int>? nationalPokedexNumbers;
   final Legalities? legalities;
   final CardImages? images;
-  final MarketInfo? tcgplayer;
+  final TcgPlayer? tcgplayer;
+  final CardMarket? cardmarket;
 
   PokemonCard({
     required this.id,
     required this.name,
     required this.supertype,
-    required this.subtypes,
-    required this.level,
-    required this.hp,
-    required this.types,
-    required this.evolvesFrom,
-    required this.abilities,
-    required this.attacks,
-    required this.weaknesses,
-    required this.resistances,
-    required this.retreatCost,
-    required this.convertedRetreatCost,
-    required this.set,
-    required this.number,
-    required this.artist,
-    required this.rarity,
-    required this.flavorText,
-    required this.nationalPokedexNumbers,
-    required this.legalities,
-    required this.images,
-    required this.tcgplayer,
+    this.subtypes,
+    this.hp,
+    this.types,
+    this.abilities,
+    this.attacks,
+    this.weaknesses,
+    this.retreatCost,
+    this.convertedRetreatCost,
+    this.set,
+    this.number,
+    this.artist,
+    this.rarity,
+    this.nationalPokedexNumbers,
+    this.legalities,
+    this.images,
+    this.tcgplayer,
+    this.cardmarket,
   });
 
   factory PokemonCard.fromJson(Map<String, dynamic> json) => _$PokemonCardFromJson(json);
@@ -60,11 +54,12 @@ class PokemonCard {
 
 @JsonSerializable()
 class Ability {
-  final String? name;
-  final String? text;
-  final String? type;
+  final String name;
+  final String text;
+  @JsonKey(name: 'type')
+  final String abilityType;
 
-  Ability({required this.name, required this.text, required this.type});
+  Ability({required this.name, required this.text, required this.abilityType});
 
   factory Ability.fromJson(Map<String, dynamic> json) => _$AbilityFromJson(json);
   Map<String, dynamic> toJson() => _$AbilityToJson(this);
@@ -72,19 +67,13 @@ class Ability {
 
 @JsonSerializable()
 class Attack {
-  final String? name;
+  final String name;
   final List<String>? cost;
   final int? convertedEnergyCost;
   final String? damage;
   final String? text;
 
-  Attack({
-    required this.name,
-    required this.cost,
-    required this.convertedEnergyCost,
-    required this.damage,
-    required this.text,
-  });
+  Attack({required this.name, this.cost, this.convertedEnergyCost, this.damage, this.text});
 
   factory Attack.fromJson(Map<String, dynamic> json) => _$AttackFromJson(json);
   Map<String, dynamic> toJson() => _$AttackToJson(this);
@@ -92,8 +81,8 @@ class Attack {
 
 @JsonSerializable()
 class Weakness {
-  final String? type;
-  final String? value;
+  final String type;
+  final String value;
 
   Weakness({required this.type, required this.value});
 
@@ -102,21 +91,10 @@ class Weakness {
 }
 
 @JsonSerializable()
-class Resistance {
-  final String? type;
-  final String? value;
-
-  Resistance({required this.type, required this.value});
-
-  factory Resistance.fromJson(Map<String, dynamic> json) => _$ResistanceFromJson(json);
-  Map<String, dynamic> toJson() => _$ResistanceToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class SetDetails {
-  final String? id;
-  final String? name;
-  final String? series;
+class CardSet {
+  final String id;
+  final String name;
+  final String series;
   final int? printedTotal;
   final int? total;
   final Legalities? legalities;
@@ -125,28 +103,28 @@ class SetDetails {
   final String? updatedAt;
   final CardImages? images;
 
-  SetDetails({
+  CardSet({
     required this.id,
     required this.name,
     required this.series,
-    required this.printedTotal,
-    required this.total,
-    required this.legalities,
-    required this.ptcgoCode,
-    required this.releaseDate,
-    required this.updatedAt,
-    required this.images,
+    this.printedTotal,
+    this.total,
+    this.legalities,
+    this.ptcgoCode,
+    this.releaseDate,
+    this.updatedAt,
+    this.images,
   });
 
-  factory SetDetails.fromJson(Map<String, dynamic> json) => _$SetDetailsFromJson(json);
-  Map<String, dynamic> toJson() => _$SetDetailsToJson(this);
+  factory CardSet.fromJson(Map<String, dynamic> json) => _$CardSetFromJson(json);
+  Map<String, dynamic> toJson() => _$CardSetToJson(this);
 }
 
 @JsonSerializable()
 class Legalities {
   final String? unlimited;
 
-  Legalities({required this.unlimited});
+  Legalities({this.unlimited});
 
   factory Legalities.fromJson(Map<String, dynamic> json) => _$LegalitiesFromJson(json);
   Map<String, dynamic> toJson() => _$LegalitiesToJson(this);
@@ -154,58 +132,103 @@ class Legalities {
 
 @JsonSerializable()
 class CardImages {
+  final String? symbol;
+  final String? logo;
   final String? small;
   final String? large;
 
-  CardImages({required this.small, required this.large});
+  CardImages({this.symbol, this.logo, this.small, this.large});
 
   factory CardImages.fromJson(Map<String, dynamic> json) => _$CardImagesFromJson(json);
   Map<String, dynamic> toJson() => _$CardImagesToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
-class MarketInfo {
+@JsonSerializable()
+class TcgPlayer {
   final String? url;
-  final Prices? prices;
+  final String? updatedAt;
+  final TcgPrices? prices;
 
-  MarketInfo({required this.url, required this.prices});
+  TcgPlayer({this.url, this.updatedAt, this.prices});
 
-  factory MarketInfo.fromJson(Map<String, dynamic> json) => _$MarketInfoFromJson(json);
-  Map<String, dynamic> toJson() => _$MarketInfoToJson(this);
+  factory TcgPlayer.fromJson(Map<String, dynamic> json) => _$TcgPlayerFromJson(json);
+  Map<String, dynamic> toJson() => _$TcgPlayerToJson(this);
 }
 
 @JsonSerializable()
-class Prices {
-  final PriceInfo? normal;
-  final PriceInfo? holofoil;
-  final PriceInfo? reverseHolofoil;
-  @JsonKey(name: '1stEditionHolofoil')
-  final PriceInfo? editionHolofoil;
-  @JsonKey(name: '1stEditionNormal')
-  final PriceInfo? editionNormal;
+class TcgPrices {
+  final TcgPriceDetail? normal;
+  final TcgPriceDetail? holofoil;
+  final TcgPriceDetail? reverseHolofoil;
 
-  Prices({required this.holofoil, required this.reverseHolofoil, required this.normal , required this.editionHolofoil, required this.editionNormal});
+  TcgPrices({this.normal, this.holofoil, this.reverseHolofoil});
 
-  factory Prices.fromJson(Map<String, dynamic> json) => _$PricesFromJson(json);
-  Map<String, dynamic> toJson() => _$PricesToJson(this);
+  factory TcgPrices.fromJson(Map<String, dynamic> json) => _$TcgPricesFromJson(json);
+  Map<String, dynamic> toJson() => _$TcgPricesToJson(this);
 }
 
 @JsonSerializable()
-class PriceInfo {
-  final double low;
-  final double mid;
-  final double high;
-  final double market;
+class TcgPriceDetail {
+  final double? low;
+  final double? mid;
+  final double? high;
+  final double? market;
   final double? directLow;
 
-  PriceInfo({
-    required this.low,
-    required this.mid,
-    required this.high,
-    required this.market,
-    this.directLow,
+  TcgPriceDetail({this.low, this.mid, this.high, this.market, this.directLow});
+
+  factory TcgPriceDetail.fromJson(Map<String, dynamic> json) => _$TcgPriceDetailFromJson(json);
+  Map<String, dynamic> toJson() => _$TcgPriceDetailToJson(this);
+}
+
+@JsonSerializable()
+class CardMarket {
+  final String? url;
+  final String? updatedAt;
+  final CardMarketPrices? prices;
+
+  CardMarket({this.url, this.updatedAt, this.prices});
+
+  factory CardMarket.fromJson(Map<String, dynamic> json) => _$CardMarketFromJson(json);
+  Map<String, dynamic> toJson() => _$CardMarketToJson(this);
+}
+
+@JsonSerializable()
+class CardMarketPrices {
+  final double? averageSellPrice;
+  final double? lowPrice;
+  final double? trendPrice;
+  final double? germanProLow;
+  final double? suggestedPrice;
+  final double? reverseHoloSell;
+  final double? reverseHoloLow;
+  final double? reverseHoloTrend;
+  final double? lowPriceExPlus;
+  final double? avg1;
+  final double? avg7;
+  final double? avg30;
+  final double? reverseHoloAvg1;
+  final double? reverseHoloAvg7;
+  final double? reverseHoloAvg30;
+
+  CardMarketPrices({
+    this.averageSellPrice,
+    this.lowPrice,
+    this.trendPrice,
+    this.germanProLow,
+    this.suggestedPrice,
+    this.reverseHoloSell,
+    this.reverseHoloLow,
+    this.reverseHoloTrend,
+    this.lowPriceExPlus,
+    this.avg1,
+    this.avg7,
+    this.avg30,
+    this.reverseHoloAvg1,
+    this.reverseHoloAvg7,
+    this.reverseHoloAvg30,
   });
 
-  factory PriceInfo.fromJson(Map<String, dynamic> json) => _$PriceInfoFromJson(json);
-  Map<String, dynamic> toJson() => _$PriceInfoToJson(this);
+  factory CardMarketPrices.fromJson(Map<String, dynamic> json) => _$CardMarketPricesFromJson(json);
+  Map<String, dynamic> toJson() => _$CardMarketPricesToJson(this);
 }
