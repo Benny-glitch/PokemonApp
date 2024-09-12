@@ -1,3 +1,4 @@
+import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_card_collector/widgets/collection_page/bottom_widget.dart';
 import 'package:pokemon_card_collector/widgets/collection_page/card_item.dart';
@@ -118,7 +119,7 @@ class CollectionPage extends StatelessWidget {
                             Container(
                               height: 60,
                               padding: EdgeInsets.all(16.0),
-                              child: Text('ciao, NEGRO'),
+                              child: Text('Spada e Scudo'),
                             ),
                             Container(
                               decoration: BoxDecoration(
@@ -243,18 +244,22 @@ class CollectionPage extends StatelessWidget {
                                         ),
                                         Padding(
                                           padding: EdgeInsets.all(width * 0.020),
-                                          child: GridView.builder(
-                                            shrinkWrap: true, // Allows GridView to fit the content
-                                            physics: const NeverScrollableScrollPhysics(), // Disable GridView scrolling
-                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 3, // Number of columns
-                                              crossAxisSpacing: 0.018 * MediaQuery.of(context).size.width, // Horizontal spacing between cards
-                                              mainAxisSpacing: 0.018 * MediaQuery.of(context).size.width, // Vertical spacing between cards
-                                              childAspectRatio: 0.49,
-                                            ),
+                                          child: DynamicHeightGridView(
+                                            shrinkWrap: true,
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            crossAxisCount: 3,
+                                            crossAxisSpacing: 10,
+                                            mainAxisSpacing: 10,
                                             itemCount: 9, // Total number of cards
-                                            itemBuilder: (context, index) {
-                                              return CardItem(); // Use the CardItem widget for each card
+                                            builder: (context, index) {
+                                              return const CardItem(
+                                                imageUrl: 'https://images.pokemontcg.io/sm75/3_hires.png',
+                                                cardType: 'Rare',
+                                                cardName: 'Charizard V',
+                                                price: '\$299.99',
+                                                quantity: 5,
+                                                badgeAlignment: Alignment.bottomLeft,
+                                              );
                                             },
                                           ),
                                         ),
