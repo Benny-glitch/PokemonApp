@@ -98,9 +98,9 @@ class CollectionPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: AutoCompleteSearchApp(),
-                    ),
+                        padding: const EdgeInsets.all(20.0),
+                        child: AutoCompleteSearchApp(),
+                      ),
                     const SizedBox(height: 26),
                     Center(
                       child: Container(
@@ -127,6 +127,7 @@ class CollectionPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(16.0),
                               ),
                               child: ExpansionTile(
+                                initiallyExpanded: true,
                                 minTileHeight: 85,
                                 collapsedBackgroundColor: Colors.transparent,
                                 shape: Border.all(

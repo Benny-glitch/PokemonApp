@@ -13,7 +13,7 @@ class CardImage extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
-            child: Image.asset(
+            child: Image.network(
               imageUrl,
               fit: BoxFit.cover,
               width: 90.0,
