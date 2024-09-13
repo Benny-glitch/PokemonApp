@@ -10,7 +10,7 @@ class CardService {
   Stream<List<PokemonCard>> searchCards(String name) async* {
     List<PokemonCard> cards = [];
     int page = 1;
-    while(page < 6){
+    while (page < 6) {
       try {
         final response = await _dio.get(
           '$_baseUrl/cards',
@@ -20,11 +20,20 @@ class CardService {
             'page': page,
           },
         );
-        for(var card in response.data['data']){
-          cards.add(PokemonCard.fromJson(card as Map<String, dynamic>));
-          yield cards;
+
+        if (response.statusCode == 200) {
+          for (var card in response.data['data']) {
+            cards.add(PokemonCard.fromJson(card as Map<String, dynamic>));
+          }
+          yield cards;  // Emit updated list of cards
+        } else {
+          // If the response status code is not 200, throw an error
+          throw Exception('Error: Failed to load cards (Status Code: ${response.statusCode})');
         }
-      }catch(e){
+      } catch (e) {
+        // Yield an error instead of crashing the stream
+        yield* Stream.error('Failed to load cards: $e');
+        return;  // Break the loop when an error occurs
       }
       page += 1;
     }
