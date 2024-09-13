@@ -15,7 +15,7 @@ class CardItem extends StatelessWidget {
     required this.cardName,
     required this.price,
     required this.quantity,
-    this.badgeAlignment = Alignment.topRight, // Default position
+    this.badgeAlignment = Alignment.topRight,
   }) : super(key: key);
 
   @override
@@ -85,23 +85,24 @@ class CardItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                SizedBox(height: width * 0.001),
                 Text(
-                  cardType, // Tipo di carta
+                  cardType,
                   style: TextStyle(
                     fontSize: width * 0.030,
                     color: Colors.grey[600],
                   ),
                 ),
-                SizedBox(height: width * 0.005),
+                SizedBox(height: width * 0.001),
                 Text(
-                  cardName, // Nome della carta
+                  cardName,
                   style: TextStyle(
                     fontSize: width * 0.04,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: width * 0.001),
+                SizedBox(height: width * 0.03),
                 Text(
                   price,
                   style: TextStyle(

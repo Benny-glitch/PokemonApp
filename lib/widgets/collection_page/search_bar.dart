@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../../models/card.dart';
 import '../../services/card_service.dart';
 
@@ -12,71 +11,83 @@ class AutoCompleteSearchApp extends StatefulWidget {
 class _AutoCompleteSearchAppState extends State<AutoCompleteSearchApp> {
   final TextEditingController _controller = TextEditingController();
   final CardService _cardService = CardService();
-  Timer? _debounce;
-  bool _isLoading = false;
+  Stream<List<PokemonCard>>? _cardStream;
+  List<PokemonCard> _suggestions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onSearchChanged);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final pattern = _controller.text;
+    if (pattern.isNotEmpty) {
+      final stream = _cardService.searchCards(pattern);
+
+
+      stream.listen((cards) {
+        setState(() {
+          _suggestions = cards;
+
+        });
+      });
+    } else {
+      setState(() {
+        _suggestions = [];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return TypeAheadField<PokemonCard?>(
-
-      textFieldConfiguration: TextFieldConfiguration(
-        controller: _controller,
-        decoration: const InputDecoration(
-          hintText: 'Search for a card...',
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              hintText: 'Search for a card...',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.search),
+            ),
+          ),
         ),
-      ),
-      suggestionsCallback: (pattern) async {
-        if (pattern.isEmpty) {
-          return [];
-        }
-
-        setState(() {
-          _isLoading = true;
-        });
-
-        if (_debounce?.isActive ?? false) {
-          _debounce?.cancel();
-        }
-
-        final completer = Completer<Iterable<PokemonCard?>>();
-
-        _debounce = Timer(const Duration(milliseconds: 0), () async {
-          List<PokemonCard>? cards = await _cardService.searchCards(pattern);
-
-          setState(() {
-            _isLoading = false;
-          });
-
-          completer.complete(cards);
-        });
-        return completer.future;
-      },
-      itemBuilder: (context, PokemonCard? suggestion) {
-        if (suggestion == null) {
-          return const SizedBox();
-        }
-        return ListTile(
-          title: Text(suggestion.name),
-        );
-      },
-      noItemsFoundBuilder: (context) {
-        if (_isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        return const ListTile(
-          title: Text('Nessuna carta trovata'),
-        );
-      },
-      suggestionsBoxDecoration: SuggestionsBoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
-        color: Colors.white,
-        elevation: 4.0,
-      ),
-      onSuggestionSelected: (PokemonCard? suggestion) {
-        if (suggestion != null) {
-          _controller.text = suggestion.name;
-        }
-      },
+        Stack(children: [
+          Container(
+            constraints: BoxConstraints(maxHeight: 200),
+            child: _suggestions.isEmpty
+                ? Center(
+                    child: Text('No cards found'),
+                  )
+                : ListView.builder(
+                    itemCount: _suggestions.length,
+                    itemBuilder: (context, index) {
+                      final card = _suggestions[index];
+                      return ListTile(
+                        title: Text(card.name),
+                        onTap: () {
+                          setState(() {
+                            _controller.text = card
+                                .name; // Aggiorna il campo di ricerca con il nome della carta selezionata
+                            _suggestions =
+                                []; // Cancella i suggerimenti dopo la selezione
+                          });
+                        },
+                      );
+                    },
+                  ),
+          ),
+        ]),
+      ],
     );
   }
 }
