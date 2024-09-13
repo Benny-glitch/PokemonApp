@@ -84,10 +84,15 @@ class CardCollectionContainer extends StatelessWidget {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(cardCount, (index) {
-                    return const Flexible(
-                      child: CardImage(
-                        imageUrl: 'https://images.pokemontcg.io/sm75/2_hires.png',
-                        count: 10,
+                    return Flexible(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            right: width * 0.020, left: width * 0.020),
+                        child: CardImage(
+                          imageUrl:
+                          'https://images.pokemontcg.io/sm75/2_hires.png',
+                          count: 10,
+                        ),
                       ),
                     );
                   }),
@@ -142,9 +147,31 @@ class CardCollectionContainer extends StatelessWidget {
                     ),
                   ),
                 ),
+
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class DetailsPage extends StatelessWidget {
+  final double totCost;
+
+  const DetailsPage({required this.totCost, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Details Page'),
+      ),
+      body: Center(
+        child: Text(
+          'Details for \$ $totCost',
+          style: TextStyle(fontSize: 24),
         ),
       ),
     );

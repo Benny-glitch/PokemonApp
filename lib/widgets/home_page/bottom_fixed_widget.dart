@@ -4,13 +4,13 @@ import 'package:pokemon_card_collector/widgets/home_page/sliding_switch_widget.d
 
 class BottomFixedWidget extends StatelessWidget {
   const BottomFixedWidget({super.key});
-  static const double height = 170;
+  static const double height = 185;
 
   @override
   Widget build(BuildContext context) {
-    bool val = false;
+    bool val = true;
     return Container(
-      height: MediaQuery.of(context).size.height * 0.19,
+      height: 160,
       color: Colors.white,
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
       child: Column(

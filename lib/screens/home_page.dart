@@ -3,6 +3,8 @@ import 'package:pokemon_card_collector/widgets/home_page/bottom_fixed_widget.dar
 import 'package:pokemon_card_collector/widgets/home_page/card_collection_container.dart';
 import 'package:pokemon_card_collector/widgets/home_page/draggable_sheet.dart';
 
+import '../widgets/home_page/carousel_notice.dart';
+
 class HomePage extends StatelessWidget {
   final DraggableScrollableController sheetController =
   DraggableScrollableController();
@@ -15,7 +17,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         surfaceTintColor: Colors.white,
         title: const Padding(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
           child: Text(
             'PokeDesk',
             style: TextStyle(
@@ -28,9 +30,15 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.grey,
-      body: const Stack(
+      body: Stack(
         children: [
-          MyDraggableSheet(
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 12,
+            ),
+            child: CarouselNotice(),
+          ),
+          const MyDraggableSheet(
             child: Column(
               children: [
                 CardCollectionContainer(totCost: 250.12),

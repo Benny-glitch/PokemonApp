@@ -4,10 +4,12 @@ class CardImage extends StatelessWidget {
   final String imageUrl;
   final int count;
 
+
   const CardImage({required this.imageUrl, required this.count, super.key});
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return SizedBox(
       child: Stack(
         children: [
@@ -15,9 +17,8 @@ class CardImage extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
               imageUrl,
+              width: width * 0.45,
               fit: BoxFit.cover,
-              width: 90.0,
-              height: 120.0,
             ),
           ),
           Positioned(
