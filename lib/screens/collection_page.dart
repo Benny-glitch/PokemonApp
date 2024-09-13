@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_card_collector/widgets/collection_page/bottom_widget.dart';
 import 'package:pokemon_card_collector/widgets/collection_page/card_item.dart';
 
-import '../widgets/collection_page/chart_widget.dart';
 import '../widgets/collection_page/search_bar.dart';
 
 class CollectionPage extends StatelessWidget {
@@ -98,7 +97,6 @@ class CollectionPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    LineChartSample2(),
                     Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: AutoCompleteSearchApp(),
