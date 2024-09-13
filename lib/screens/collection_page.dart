@@ -11,7 +11,7 @@ class CollectionPage extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white60,
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: Colors.white,
@@ -88,201 +88,257 @@ class CollectionPage extends StatelessWidget {
           )
         ],
       ),
-      body: Column(
+      body:
+      Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
+              child: Column(children: [
+                Container(
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20,),
+                      Text('Total Value', style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w100,
+                        color: Colors.grey.shade500,
+                      ),),
+                      Text('VALORE', style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),),
+                      Text('Profitto fatto'),
+                      SizedBox(height: 28,),
+                      Text('About Collection',
+                        style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w100,
+                        color: Colors.grey.shade500,
+                      ),),
+                      SizedBox(height: 8,),
+                      Text('PICCOLA DESCRIZIONE INSERITA AL DI SOPRA'),
+                      SizedBox(height: 12,),
+                    ],
+                  ),
+                ),
+                Divider(
+                  height: 1,
+                  color: Colors.grey.shade200,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: AutoCompleteSearchApp(),
                       ),
-                    const SizedBox(height: 26),
-                    Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade50,
-                          borderRadius: BorderRadius.circular(16.0),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black12,
-                              spreadRadius: 0.5,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 60,
-                              padding: EdgeInsets.all(16.0),
-                              child: Text('Spada e Scudo'),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16.0),
+                      const SizedBox(height: 26),
+                      Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade50,
+                            borderRadius: BorderRadius.circular(16.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                spreadRadius: 0.5,
                               ),
-                              child: ExpansionTile(
-                                initiallyExpanded: true,
-                                minTileHeight: 85,
-                                collapsedBackgroundColor: Colors.transparent,
-                                shape: Border.all(
-                                    color: Colors.transparent
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 60,
+                                padding: EdgeInsets.all(16.0),
+                                child: Text('Spada e Scudo'),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16.0),
                                 ),
-                                title: Text(
-                                  'Brilliant Stars',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                child: ExpansionTile(
+                                  initiallyExpanded: true,
+                                  minTileHeight: 85,
+                                  collapsedBackgroundColor: Colors.transparent,
+                                  shape: Border.all(color: Colors.transparent),
+                                  title: Text(
+                                    'Brilliant Stars',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(16.0),
-                                        bottomRight: Radius.circular(16.0),
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(16.0),
+                                          bottomRight: Radius.circular(16.0),
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black12,
+                                            spreadRadius: 0.5,
+                                          ),
+                                        ],
                                       ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black12,
-                                          spreadRadius: 0.5,
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Divider(
-                                          color: Colors.grey,
-                                          height: 1.0,
-                                          thickness: 0.3,
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.all(16.0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(height: 16),
-                                              const Row(
-                                                children: [
-                                                  Text(
-                                                    'Collection',
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(height: 8),
-                                              LinearProgressIndicator(
-                                                value: 0.25,
-                                                backgroundColor: Colors.grey[300],
-                                                valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
-                                              ),
-                                              SizedBox(height: 16),
-                                              const Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(
-                                                          '25%',
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          '3 - 230 cards',
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            color: Colors.orange,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                                      children: [
-                                                        Text(
-                                                          'Total value',
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          '\$1,329.18',
-                                                          style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.green,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Divider(
+                                            color: Colors.grey,
+                                            height: 1.0,
+                                            thickness: 0.3,
                                           ),
-                                        ),
-                                        const Divider(
-                                          color: Colors.grey,
-                                          height: 1.0,
-                                          thickness: 0.3,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(width * 0.020),
-                                          child: DynamicHeightGridView(
-                                            shrinkWrap: true,
-                                            physics: const NeverScrollableScrollPhysics(),
-                                            crossAxisCount: 3,
-                                            crossAxisSpacing: 10,
-                                            mainAxisSpacing: 10,
-                                            itemCount: 9, // Total number of cards
-                                            builder: (context, index) {
-                                              return const CardItem(
-                                                imageUrl: 'https://images.pokemontcg.io/sm75/3_hires.png',
-                                                cardType: 'Rare',
-                                                cardName: 'Charizard V',
-                                                price: '\$299.99',
-                                                quantity: 5,
-                                                badgeAlignment: Alignment.bottomLeft,
-                                              );
-                                            },
+                                          Container(
+                                            padding: EdgeInsets.all(16.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(height: 16),
+                                                const Row(
+                                                  children: [
+                                                    Text(
+                                                      'Collection',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 8),
+                                                LinearProgressIndicator(
+                                                  value: 0.25,
+                                                  backgroundColor:
+                                                      Colors.grey[300],
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(Colors.orange),
+                                                ),
+                                                SizedBox(height: 16),
+                                                const Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            '25%',
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            '3 - 230 cards',
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.orange,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Text(
+                                                            'Total value',
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            '\$1,329.18',
+                                                            style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.green,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                          const Divider(
+                                            color: Colors.grey,
+                                            height: 1.0,
+                                            thickness: 0.3,
+                                          ),
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.all(width * 0.020),
+                                            child: DynamicHeightGridView(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              crossAxisCount: 3,
+                                              crossAxisSpacing: 10,
+                                              mainAxisSpacing: 10,
+                                              itemCount: 9,
+                                              // Total number of cards
+                                              builder: (context, index) {
+                                                return const CardItem(
+                                                  imageUrl:
+                                                      'https://images.pokemontcg.io/sm75/3_hires.png',
+                                                  cardType: 'Rare',
+                                                  cardName: 'Charizard V',
+                                                  price: '\$299.99',
+                                                  quantity: 5,
+                                                  badgeAlignment:
+                                                      Alignment.bottomLeft,
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+              ]),
             ),
           ),
-          const BottomWidget(), // The BottomWidget will always stay at the bottom
+          const BottomWidget(),
         ],
       ),
     );
   }
 }
-
