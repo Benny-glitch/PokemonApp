@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pokemon_card_collector/screens/create_collection_page.dart';
 import 'package:pokemon_card_collector/widgets/home_page/sliding_switch_widget.dart';
 
 class BottomFixedWidget extends StatelessWidget {
@@ -16,28 +17,38 @@ class BottomFixedWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.0),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  spreadRadius: 0.5,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateCollectionPage(),
                 ),
-              ],
-            ),
-            child:
-            const Row(
-            children: [
-              Icon(Icons.folder, color: Colors.orange),
-              SizedBox(width: 8),
-              Text('Create new collection'),
-              Spacer(),
-              Icon(Icons.add, color: Colors.black),
-            ],
-          ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.0),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    spreadRadius: 0.5,
+                  ),
+                ],
+              ),
+              child:
+              const Row(
+                  children: [
+                    Icon(Icons.folder, color: Colors.orange),
+                    SizedBox(width: 8),
+                    Text('Create new collection'),
+                    Spacer(),
+                    Icon(Icons.add, color: Colors.black),
+                  ],
+                ),
+              ),
           ),
           const SizedBox(height: 13),
           SlidingSwitch(
