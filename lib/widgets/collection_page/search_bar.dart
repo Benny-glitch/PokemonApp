@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import '../../models/card.dart';
 import '../../services/card_service.dart';
 
-class AutoCompleteSearchApp extends StatefulWidget {
+class AutoCompleteSearchWidget extends StatefulWidget {
   @override
-  _AutoCompleteSearchAppState createState() => _AutoCompleteSearchAppState();
+  _AutoCompleteSearchWidgetState createState() => _AutoCompleteSearchWidgetState();
 }
 
-class _AutoCompleteSearchAppState extends State<AutoCompleteSearchApp> {
+class _AutoCompleteSearchWidgetState extends State<AutoCompleteSearchWidget> {
   final TextEditingController _controller = TextEditingController();
   final CardService _cardService = CardService();
-  Stream<List<PokemonCard>>? _cardStream;
   List<PokemonCard> _suggestions = [];
+  Timer? _debounce;
+  bool _isSuggestionSelected = false;
+  StreamSubscription<List<PokemonCard>>? _subscription;
 
   @override
   void initState() {
@@ -24,26 +26,65 @@ class _AutoCompleteSearchAppState extends State<AutoCompleteSearchApp> {
   void dispose() {
     _controller.removeListener(_onSearchChanged);
     _controller.dispose();
+    _debounce?.cancel();
+    _subscription?.cancel();
     super.dispose();
   }
 
   void _onSearchChanged() {
-    final pattern = _controller.text;
-    if (pattern.isNotEmpty) {
-      final stream = _cardService.searchCards(pattern);
+    if (_isSuggestionSelected) {
+      return;
+    }
 
-
-      stream.listen((cards) {
-        setState(() {
-          _suggestions = cards;
-
-        });
-      });
-    } else {
+    if (_controller.text.isEmpty) {
       setState(() {
         _suggestions = [];
       });
+      _debounce?.cancel();
+      _subscription?.cancel();
+      return;
     }
+
+    if (_debounce?.isActive ?? false) {
+      _debounce!.cancel();
+    }
+
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      final pattern = _controller.text;
+
+      if (pattern.isNotEmpty) {
+        _subscription?.cancel();
+
+        final stream = _cardService.searchCards(pattern);
+
+        _subscription = stream.listen((cards) {
+          if (!_isSuggestionSelected) {
+            setState(() {
+              _suggestions = cards;
+            });
+          }
+        });
+      }
+    });
+  }
+
+  void _onSuggestionSelected(PokemonCard card) {
+    _isSuggestionSelected = true;
+
+    _controller.removeListener(_onSearchChanged);
+
+    _subscription?.cancel();
+
+    setState(() {
+      _controller.text = card.name;
+      _suggestions = [];
+    });
+
+
+    Future.delayed(Duration(milliseconds: 100), () {
+      _controller.addListener(_onSearchChanged);
+      _isSuggestionSelected = false;
+    });
   }
 
   @override
@@ -61,32 +102,59 @@ class _AutoCompleteSearchAppState extends State<AutoCompleteSearchApp> {
             ),
           ),
         ),
-        Stack(children: [
-          Container(
-            constraints: BoxConstraints(maxHeight: 200),
-            child: _suggestions.isEmpty
-                ? Center(
-                    child: Text('No cards found'),
-                  )
-                : ListView.builder(
-                    itemCount: _suggestions.length,
-                    itemBuilder: (context, index) {
-                      final card = _suggestions[index];
-                      return ListTile(
-                        title: Text(card.name),
-                        onTap: () {
-                          setState(() {
-                            _controller.text = card
-                                .name; // Aggiorna il campo di ricerca con il nome della carta selezionata
-                            _suggestions =
-                                []; // Cancella i suggerimenti dopo la selezione
-                          });
+        AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          constraints: _suggestions.isEmpty
+              ? BoxConstraints(maxHeight: 0)
+              : BoxConstraints(maxHeight: 200),
+          child: _suggestions.isEmpty
+              ? SizedBox.shrink()
+              : ListView.builder(
+            itemCount: _suggestions.length,
+            itemBuilder: (context, index) {
+              final card = _suggestions[index];
+              return Column(
+                children: [
+                  ListTile(
+                    leading: Container(
+                      width: 50,
+                      height: 50,
+                      child:  card.images!.small.toString().isNotEmpty
+                          ? Image.network(
+                        card.images!.small.toString(),
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[200],
+                            child: Icon(
+                              Icons.error,
+                              color: Colors.red,
+                              size: 24,
+                            ),
+                          );
                         },
-                      );
-                    },
+                      )
+                          : Container(
+                        color: Colors.grey[200],
+                        child: Icon(
+                          Icons.error,
+                          color: Colors.red,
+                          size: 36,
+                        ),
+                      ),
+                    ),
+                    title: Text(card.name),
+                    onTap: () => _onSuggestionSelected(card),
                   ),
+                  SizedBox(height: 8),
+                ],
+              );
+            },
           ),
-        ]),
+        ),
       ],
     );
   }
