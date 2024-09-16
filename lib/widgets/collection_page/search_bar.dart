@@ -1,17 +1,15 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../models/card.dart';
 import '../../services/card_service.dart';
 
-class AutoCompleteSearchApp extends StatefulWidget {
+class AutoCompleteSearchWidget extends StatefulWidget {
   @override
-  _AutoCompleteSearchAppState createState() => _AutoCompleteSearchAppState();
+  _AutoCompleteSearchWidgetState createState() => _AutoCompleteSearchWidgetState();
 }
 
-class _AutoCompleteSearchAppState extends State<AutoCompleteSearchApp> {
+class _AutoCompleteSearchWidgetState extends State<AutoCompleteSearchWidget> {
   final TextEditingController _controller = TextEditingController();
   final CardService _cardService = CardService();
-  Stream<List<PokemonCard>>? _cardStream;
   List<PokemonCard> _suggestions = [];
 
   @override

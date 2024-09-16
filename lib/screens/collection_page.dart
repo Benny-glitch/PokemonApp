@@ -135,7 +135,7 @@ class CollectionPage extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(20.0),
-                        child: AutoCompleteSearchApp(),
+                        child: AutoCompleteSearchWidget(),
                       ),
                       const SizedBox(height: 26),
                       Center(
