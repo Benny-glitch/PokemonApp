@@ -2,14 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_card_collector/widgets/home_page/bottom_fixed_widget.dart';
 import 'package:pokemon_card_collector/widgets/home_page/card_collection_container.dart';
 import 'package:pokemon_card_collector/widgets/home_page/draggable_sheet.dart';
+import 'package:pokemon_card_collector/widgets/home_page/carousel_notice.dart';
 
-import '../widgets/home_page/carousel_notice.dart';
+import 'create_collection_form.dart';  // Importa il form
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final DraggableScrollableController sheetController =
   DraggableScrollableController();
 
   HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool _isFormVisible = false;  // Stato per gestire la visibilità del form
+
+  void _toggleFormVisibility() {
+    setState(() {
+      _isFormVisible = !_isFormVisible;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +46,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.grey,
       body: Stack(
         children: [
+          // Il contenuto della pagina
           Padding(
             padding: const EdgeInsets.only(
               top: 12,
@@ -53,8 +68,14 @@ class HomePage extends StatelessWidget {
             bottom: 0,
             left: 0,
             right: 0,
-            child: BottomFixedWidget(),
+            child: BottomFixedWidget(onCreateCollectionTap: _toggleFormVisibility),
           ),
+
+          // Mostra il form solo se _isFormVisible è true
+          if (_isFormVisible)
+            CreateCollectionForm(
+              onClose: _toggleFormVisibility,  // Chiude il form
+            ),
         ],
       ),
     );
