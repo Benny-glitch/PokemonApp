@@ -17,16 +17,15 @@ class SlidingSwitch extends StatefulWidget {
   final Color buttonColor;
   final Color inactiveColor;
   final Function onTap;
-  final Function onDoubleTap;
   final Function onSwipe;
 
-  const SlidingSwitch({super.key,
+  const SlidingSwitch({
+    super.key,
     required this.value,
     required this.onChanged,
     this.height = 55,
     this.animationDuration = const Duration(milliseconds: 100),
     required this.onTap,
-    required this.onDoubleTap,
     required this.onSwipe,
     this.textOff = "Off",
     this.textOn = "On",
@@ -65,7 +64,7 @@ class _SlidingSwitch extends State<SlidingSwitch> with SingleTickerProviderState
         upperBound: 1.0,
         duration: widget.animationDuration);
     animation = CurvedAnimation(
-        parent: animationController, curve: Curves.fastOutSlowIn);
+        parent: animationController, curve: Curves.easeInOutCubic);
     animationController.addListener(() {
       setState(() {
         value = animation.value;
@@ -82,9 +81,13 @@ class _SlidingSwitch extends State<SlidingSwitch> with SingleTickerProviderState
         double dynamicWidth = constraints.maxWidth;
 
         return GestureDetector(
-          onTap: () {
-            _action();
-            widget.onTap();
+          onTapDown: (details) {
+            double tapPosition = details.localPosition.dx;
+            if ((!turnState && tapPosition > dynamicWidth * 0.5) ||
+                (turnState && tapPosition < dynamicWidth * 0.5)) {
+              _action();
+              widget.onTap();
+            }
           },
           onPanEnd: (details) {
             _action();

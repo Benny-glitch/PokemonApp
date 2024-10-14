@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_card_collector/screens/explore_page.dart';
 import 'package:pokemon_card_collector/widgets/home_page/bottom_fixed_widget.dart';
 import 'package:pokemon_card_collector/widgets/home_page/card_collection_container.dart';
 import 'package:pokemon_card_collector/widgets/home_page/draggable_sheet.dart';
-import 'package:pokemon_card_collector/widgets/home_page/carousel_notice.dart';
-
-import 'create_collection_form.dart';  // Importa il form
+import '../widgets/home_page/carousel_notice.dart';
 
 class HomePage extends StatefulWidget {
   final DraggableScrollableController sheetController =
@@ -17,13 +16,33 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isFormVisible = false;  // Stato per gestire la visibilità del form
+  final DraggableScrollableController sheetController = DraggableScrollableController();
 
-  void _toggleFormVisibility() {
-    setState(() {
-      _isFormVisible = !_isFormVisible;
-    });
-  }
+  bool isExploreSelected = true;
+
+  final List<Widget> _pages = [
+
+    const Stack(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 12),
+          child: CarouselNotice(),
+        ),
+        MyDraggableSheet(
+          child: Column(
+            children: [
+              CardCollectionContainer(totCost: 250.12),
+              CardCollectionContainer(totCost: 250.12),
+              CardCollectionContainer(totCost: 250.12),
+              CardCollectionContainer(totCost: 250.12),
+              CardCollectionContainer(totCost: 250.12),
+            ],
+          ),
+        ),
+      ],
+    ),
+    const ExplorePage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +54,7 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             'PokeDesk',
             style: TextStyle(
+              color: Colors.white,
               fontWeight: FontWeight.w900,
               fontSize: 28,
             ),
@@ -46,35 +66,25 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.grey,
       body: Stack(
         children: [
-          // Il contenuto della pagina
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 12,
-            ),
-            child: CarouselNotice(),
-          ),
-          const MyDraggableSheet(
-            child: Column(
-              children: [
-                CardCollectionContainer(totCost: 250.12),
-                CardCollectionContainer(totCost: 250.12),
-                CardCollectionContainer(totCost: 250.12),
-                CardCollectionContainer(totCost: 250.12),
-                CardCollectionContainer(totCost: 250.12),
-              ],
-            ),
-          ),
+          _pages[isExploreSelected ? 0 : 1],
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
-            child: BottomFixedWidget(onCreateCollectionTap: _toggleFormVisibility),
+            child: BottomFixedWidget(
+    onCreateCollectionTap: _toggleFormVisibility,
+              onSwitchChange: (bool isExplore) {
+                setState(() {
+                  isExploreSelected = isExplore;
+                });
+              },
+            ),
           ),
 
-          // Mostra il form solo se _isFormVisible è true
+
           if (_isFormVisible)
             CreateCollectionForm(
-              onClose: _toggleFormVisibility,  // Chiude il form
+              onClose: _toggleFormVisibility,
             ),
         ],
       ),
