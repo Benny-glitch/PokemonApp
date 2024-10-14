@@ -20,28 +20,30 @@ class BottomFixedWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.0),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  spreadRadius: 0.5,
-                ),
-              ],
+          GestureDetector(
+            onTap: onCreateCollectionTap,  // Mostra il form quando si clicca
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.0),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    spreadRadius: 0.5,
+                  ),
+                ],
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.folder, color: Colors.orange),
+                  SizedBox(width: 8),
+                  Text('Create new collection'),
+                  Spacer(),
+                  Icon(Icons.add, color: Colors.black),
+                ],
+              ),
             ),
-            child:
-            const Row(
-            children: [
-              Icon(Icons.folder, color: Colors.orange),
-              SizedBox(width: 8),
-              Text('Create new collection'),
-              Spacer(),
-              Icon(Icons.add, color: Colors.black),
-            ],
-          ),
           ),
           const SizedBox(height: 13),
           SlidingSwitch(

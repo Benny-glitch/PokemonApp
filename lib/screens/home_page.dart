@@ -4,6 +4,7 @@ import 'package:pokemon_card_collector/widgets/home_page/bottom_fixed_widget.dar
 import 'package:pokemon_card_collector/widgets/home_page/card_collection_container.dart';
 import 'package:pokemon_card_collector/widgets/home_page/draggable_sheet.dart';
 import '../widgets/home_page/carousel_notice.dart';
+import 'create_collection_form.dart';
 
 class HomePage extends StatefulWidget {
   final DraggableScrollableController sheetController =
@@ -19,6 +20,14 @@ class _HomePageState extends State<HomePage> {
   final DraggableScrollableController sheetController = DraggableScrollableController();
 
   bool isExploreSelected = true;
+
+  bool _isFormVisible = false;
+
+  void _toggleFormVisibility() {
+    setState(() {
+      _isFormVisible = !_isFormVisible;
+    });
+  }
 
   final List<Widget> _pages = [
 
@@ -54,7 +63,7 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             'PokeDesk',
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               fontWeight: FontWeight.w900,
               fontSize: 28,
             ),
@@ -72,7 +81,7 @@ class _HomePageState extends State<HomePage> {
             left: 0,
             right: 0,
             child: BottomFixedWidget(
-    onCreateCollectionTap: _toggleFormVisibility,
+              onCreateCollectionTap: _toggleFormVisibility,
               onSwitchChange: (bool isExplore) {
                 setState(() {
                   isExploreSelected = isExplore;
@@ -80,7 +89,6 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
-
 
           if (_isFormVisible)
             CreateCollectionForm(
