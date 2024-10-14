@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_card_collector/widgets/home_page/sliding_switch_widget.dart';
 
 class BottomFixedWidget extends StatelessWidget {
-  const BottomFixedWidget({super.key});
+  final ValueChanged<bool> onSwitchChange;
+
+  const BottomFixedWidget({super.key, required this.onSwitchChange});
   static const double height = 185;
 
   @override
@@ -43,12 +45,11 @@ class BottomFixedWidget extends StatelessWidget {
           SlidingSwitch(
             value: val,
             onChanged: (bool onChangeValue) {
-              val = onChangeValue;
+              onSwitchChange(onChangeValue);
             },
             height: 45,
-            animationDuration: const Duration(milliseconds: 75),
+            animationDuration: const Duration(milliseconds: 350),
             onTap: () {},
-            onDoubleTap: () {},
             onSwipe: () {},
             textOff: "Explore",
             textOn: "Collection",
