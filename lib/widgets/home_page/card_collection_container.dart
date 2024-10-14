@@ -56,15 +56,43 @@ class CardCollectionContainer extends StatelessWidget {
                         ),
                       ),
                     ]),
-                Text(
-                  'Total value\n \$ $totCost',
-                  textAlign: TextAlign.right,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                  Text(
+                    'Total value',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade400,
+                    ),
                   ),
-                ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Transform.rotate(
+                          angle: -1.5708,
+                          child: Icon(
+                              Icons.arrow_outward,
+                            color: Colors.green,
+                            size: 15,
+                          ),
+                        ),
+                        Text(
+                          ' \$$totCost',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],)
               ],
             ),
             const Divider(thickness: 0.3),
@@ -103,13 +131,13 @@ class CardCollectionContainer extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  flex: 8,
+                  flex: 14,
                   child: TextButton(
                     onPressed: () {
                       // Add the logic
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepOrange.shade50,
+                      backgroundColor: const Color(0xffFDF7F4),
                       minimumSize: const Size.fromHeight(50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
@@ -130,14 +158,14 @@ class CardCollectionContainer extends StatelessWidget {
                   child: OutlinedButton(
                     onPressed: () {},
                     style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.grey.shade50,
+                      backgroundColor: Colors.white,
                       minimumSize: const Size.fromHeight(50),
                       alignment: Alignment.center,
                       padding: EdgeInsets.zero,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
-                      side: BorderSide(width: 1, color: Colors.grey.shade100),
+                      side: BorderSide(width: 1.5, color: Colors.grey.shade100),
                     ),
                     child: const Center(
                       child: Icon(
