@@ -4,8 +4,14 @@ import 'card_image.dart';
 
 class CardCollectionContainer extends StatelessWidget {
   final double totCost;
+  final String collectionName;
+  final String collectionDescription;
 
-  const CardCollectionContainer({required this.totCost, super.key});
+  const CardCollectionContainer(
+      {required this.totCost,
+      super.key,
+      required this.collectionName,
+      required this.collectionDescription});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +25,8 @@ class CardCollectionContainer extends StatelessWidget {
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(left: 25.0, right: 25.0, top: 18.0, bottom: 0),
+        margin: const EdgeInsets.only(
+            left: 25.0, right: 25.0, top: 18.0, bottom: 0),
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -38,45 +45,43 @@ class CardCollectionContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'V & Vstar group',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '20 ITEMS',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ]),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    ' $collectionName ',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '20 ITEMS',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ]),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                  Text(
-                    'Total value',
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade400,
+                    Text(
+                      'Total value',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade400,
+                      ),
                     ),
-                  ),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Transform.rotate(
                           angle: -1.5708,
                           child: Icon(
-                              Icons.arrow_outward,
+                            Icons.arrow_outward,
                             color: Colors.green,
                             size: 15,
                           ),
@@ -92,7 +97,8 @@ class CardCollectionContainer extends StatelessWidget {
                         ),
                       ],
                     )
-                  ],)
+                  ],
+                )
               ],
             ),
             const Divider(thickness: 0.3),
@@ -118,7 +124,7 @@ class CardCollectionContainer extends StatelessWidget {
                             right: width * 0.020, left: width * 0.020),
                         child: CardImage(
                           imageUrl:
-                          'https://images.pokemontcg.io/sm75/2_hires.png',
+                              'https://images.pokemontcg.io/sm75/2_hires.png',
                           count: 10,
                         ),
                       ),
@@ -175,7 +181,6 @@ class CardCollectionContainer extends StatelessWidget {
                     ),
                   ),
                 ),
-
               ],
             ),
           ],

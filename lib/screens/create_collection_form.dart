@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CreateCollectionForm extends StatelessWidget {
   final VoidCallback onClose;
+  final Function(String, String) onSave;
 
-  const CreateCollectionForm({Key? key, required this.onClose})
-      : super(key: key);
+  const CreateCollectionForm({
+    super.key,
+    required this.onClose,
+    required this.onSave,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _collectionNameController =
-    TextEditingController();
-    final TextEditingController _collectionDescriptionController =
-    TextEditingController();
+    final TextEditingController collectionNameController = TextEditingController();
+    final TextEditingController collectionDescriptionController = TextEditingController();
+
+    void showToast(String message) {
+      Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
 
     return Positioned.fill(
       child: GestureDetector(
@@ -61,7 +75,7 @@ class CreateCollectionForm extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               TextField(
-                                controller: _collectionNameController,
+                                controller: collectionNameController,
                                 decoration: InputDecoration(
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -90,7 +104,7 @@ class CreateCollectionForm extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               TextField(
-                                controller: _collectionDescriptionController,
+                                controller: collectionDescriptionController,
                                 decoration: InputDecoration(
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -122,7 +136,15 @@ class CreateCollectionForm extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       child: TextButton(
                         onPressed: () {
-                          // Add the logic
+                          final String name = collectionNameController.text;
+                          final String description = collectionDescriptionController.text;
+
+                          if (name.isEmpty) {
+                            showToast("Collection name is required");
+                            return;
+                          }
+
+                          onSave(name, description);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepOrange.shade50,
@@ -150,4 +172,3 @@ class CreateCollectionForm extends StatelessWidget {
     );
   }
 }
-

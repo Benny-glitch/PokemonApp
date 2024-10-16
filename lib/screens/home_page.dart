@@ -17,11 +17,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final DraggableScrollableController sheetController = DraggableScrollableController();
-
-  bool isExploreSelected = true;
-
+  int _currentPageIndex = 0;
   bool _isFormVisible = false;
+
+  final List<Widget> _collections = [];
 
   void _toggleFormVisibility() {
     setState(() {
@@ -29,29 +28,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final List<Widget> _pages = [
-
-    const Stack(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: 12),
-          child: CarouselNotice(),
-        ),
-        MyDraggableSheet(
-          child: Column(
-            children: [
-              CardCollectionContainer(totCost: 250.12),
-              CardCollectionContainer(totCost: 250.12),
-              CardCollectionContainer(totCost: 250.12),
-              CardCollectionContainer(totCost: 250.12),
-              CardCollectionContainer(totCost: 250.12),
-            ],
-          ),
-        ),
-      ],
-    ),
-    const ExplorePage(),
-  ];
+  void _addNewCollection(String name, String description) {
+    setState(() {
+      _collections.add(CardCollectionContainer(
+        totCost: 0,
+        collectionName: name,
+        collectionDescription: description,
+      ));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +60,25 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.grey,
       body: Stack(
         children: [
-          _pages[isExploreSelected ? 0 : 1],
+          IndexedStack(
+            index: _currentPageIndex,
+            children: [
+              Stack(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 12),
+                    child: CarouselNotice(),
+                  ),
+                  MyDraggableSheet(
+                    child: Column(
+                      children: _collections,
+                    ),
+                  ),
+                ],
+              ),
+              const ExplorePage(),
+            ],
+          ),
           Positioned(
             bottom: 0,
             left: 0,
@@ -84,15 +87,18 @@ class _HomePageState extends State<HomePage> {
               onCreateCollectionTap: _toggleFormVisibility,
               onSwitchChange: (bool isExplore) {
                 setState(() {
-                  isExploreSelected = isExplore;
+                  _currentPageIndex = isExplore ? 0 : 1;
                 });
               },
             ),
           ),
-
           if (_isFormVisible)
             CreateCollectionForm(
               onClose: _toggleFormVisibility,
+              onSave: (String name, String description) {
+                _addNewCollection(name, description);
+                _toggleFormVisibility();
+              },
             ),
         ],
       ),

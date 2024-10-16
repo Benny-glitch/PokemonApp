@@ -21,7 +21,7 @@ class BottomFixedWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           GestureDetector(
-            onTap: onCreateCollectionTap,  // Mostra il form quando si clicca
+            onTap: onCreateCollectionTap,
             child: Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
