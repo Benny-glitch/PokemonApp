@@ -61,8 +61,8 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
         controller: controller,
         builder: (BuildContext context, ScrollController scrollController) {
           return DecoratedBox(
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(22),
                 topRight: Radius.circular(22),
@@ -93,7 +93,7 @@ class _MyDraggableSheetState extends State<MyDraggableSheet> {
                   child: SingleChildScrollView(
                     controller: scrollController,
                     child: Container(
-                      color: Colors.grey.shade50,
+                      color: Colors.transparent,
                       padding: const EdgeInsets.only(
                           bottom: BottomFixedWidget.height
                       ),
