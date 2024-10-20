@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pokemon_card_collector/screens/home_page.dart';
 
 void main() {
@@ -15,8 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Pokedesk App',
       theme: ThemeData(
         useMaterial3: true,
-        primarySwatch: Colors.blue,
-        textTheme: GoogleFonts.nunitoTextTheme(),
+        fontFamily: 'TTCommon',
       ),
       home: HomePage(),
     );
