@@ -3,9 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_card_collector/widgets/collection_page/bottom_widget.dart';
 import 'package:pokemon_card_collector/widgets/collection_page/card_item.dart';
 
-import '../widgets/collection_page/search_bar.dart';
 
 class CollectionPage extends StatelessWidget {
+  final String collectionDescription;
+  final String collectionName;
+
+  const CollectionPage({
+    super.key,
+    required this.collectionName,
+    required this.collectionDescription,
+  });
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -33,7 +41,7 @@ class CollectionPage extends StatelessWidget {
             size: 20.0,
           ),
         ),
-        title: const Text('V & Vstar group'),
+        title: Text('$collectionName'),
         actions: [
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
@@ -119,7 +127,7 @@ class CollectionPage extends StatelessWidget {
                         color: Colors.grey.shade500,
                       ),),
                       SizedBox(height: 8,),
-                      Text('PICCOLA DESCRIZIONE INSERITA AL DI SOPRA'),
+                      Text(collectionDescription),
                       SizedBox(height: 12,),
                     ],
                   ),
@@ -133,11 +141,6 @@ class CollectionPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: AutoCompleteSearchWidget(),
-                      ),
-                      const SizedBox(height: 26),
                       Center(
                         child: Container(
                           decoration: BoxDecoration(

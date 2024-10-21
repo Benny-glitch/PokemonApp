@@ -20,7 +20,7 @@ class CardCollectionContainer extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CollectionPage(),
+            builder: (context) => CollectionPage(collectionName:collectionName, collectionDescription: collectionDescription),
           ),
         );
       },
