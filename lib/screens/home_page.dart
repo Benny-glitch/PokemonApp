@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
             'PokeDesk',
             style: TextStyle(
               color: Colors.black,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
               fontSize: 28,
             ),
           ),
