@@ -24,8 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'Pokedesk App',
       theme: ThemeData(
         useMaterial3: true,
-        primarySwatch: Colors.blue,
-        textTheme: GoogleFonts.nunitoTextTheme(),
+        fontFamily: 'TTCommon',
       ),
       home: HomePage(),
     );

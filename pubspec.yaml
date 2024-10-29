@@ -98,3 +98,19 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  fonts:
+    - family: TTCommon
+      fonts:
+        - asset: fonts/TT Commons Regular.otf
+          style: normal
+        - asset: fonts/TT Commons Thin.otf
+          weight: 100
+        - asset: fonts/TT Commons Light.otf
+          weight: 300
+        - asset: fonts/TT Commons Medium.otf
+          weight: 500
+        - asset: fonts/TT Commons Bold.otf
+          weight: 700
+        - asset: fonts/TT Commons ExtraBold.otf
+          weight: 900
