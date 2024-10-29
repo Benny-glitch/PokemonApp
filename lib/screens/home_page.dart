@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:pokemon_card_collector/screens/explore_page.dart';
 import 'package:pokemon_card_collector/widgets/home_page/bottom_fixed_widget.dart';
 import 'package:pokemon_card_collector/widgets/home_page/card_collection_container.dart';
 import 'package:pokemon_card_collector/widgets/home_page/draggable_sheet.dart';
+import '../models/card_collection.dart';
 import '../widgets/home_page/carousel_notice.dart';
 import 'create_collection_form.dart';
 
@@ -20,7 +22,22 @@ class _HomePageState extends State<HomePage> {
   int _currentPageIndex = 0;
   bool _isFormVisible = false;
 
-  final List<Widget> _collections = [];
+  final List<CardCollection> _collections = [];
+
+  late Box<CardCollection> _collectionBox;
+
+  @override
+  void initState() {
+    super.initState();
+    _openHiveBox();
+  }
+
+  Future<void> _openHiveBox() async {
+    _collectionBox = await Hive.openBox<CardCollection>('card_collections');
+    setState(() {
+      _collections.addAll(_collectionBox.values.toList());
+    });
+  }
 
   void _toggleFormVisibility() {
     setState(() {
@@ -29,13 +46,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _addNewCollection(String name, String description) {
+    final newCollection = CardCollection(
+      name: name,
+      description: description,
+      totCost: 0,
+    );
+
     setState(() {
-      _collections.add(CardCollectionContainer(
-        totCost: 0,
-        collectionName: name,
-        collectionDescription: description,
-      ));
+      _collections.add(newCollection);
     });
+
+    _collectionBox.add(newCollection);
   }
 
   @override
@@ -71,7 +92,14 @@ class _HomePageState extends State<HomePage> {
                   ),
                   MyDraggableSheet(
                     child: Column(
-                      children: _collections,
+                      children: _collections.map((collection) {
+                        return CardCollectionContainer(
+                          totCost: collection.totCost,
+                          collectionName: collection.name,
+                          collectionDescription: collection.description,
+                          collectionCardNumber: 0,
+                        );
+                      }).toList(),
                     ),
                   ),
                 ],
@@ -105,3 +133,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
