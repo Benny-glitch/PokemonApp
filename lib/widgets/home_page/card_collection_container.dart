@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_card_collector/screens/collection_page.dart';
+import 'package:pokemon_card_collector/widgets/home_page/place_holder_card.dart';
 import 'card_image.dart';
 
 class CardCollectionContainer extends StatelessWidget {
   final double totCost;
   final String collectionName;
   final String collectionDescription;
+  final int collectionCardNumber;
 
-  const CardCollectionContainer(
-      {required this.totCost,
-      super.key,
-      required this.collectionName,
-      required this.collectionDescription});
+  const CardCollectionContainer({
+    required this.totCost,
+    required this.collectionName,
+    required this.collectionDescription,
+    required this.collectionCardNumber,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +24,15 @@ class CardCollectionContainer extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CollectionPage(collectionName:collectionName, collectionDescription: collectionDescription),
+            builder: (context) => CollectionPage(
+              collectionName: collectionName,
+              collectionDescription: collectionDescription,
+            ),
           ),
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(
-            left: 25.0, right: 25.0, top: 18.0, bottom: 0),
+        margin: const EdgeInsets.only(left: 25.0, right: 25.0, top: 18.0),
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -43,32 +49,31 @@ class CardCollectionContainer extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(
-                    ' $collectionName ',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$collectionName ',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '20 ITEMS',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
+                    Text(
+                      '$collectionCardNumber ITEMS',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
-                ]),
+                  ],
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
                       'Total value',
-                      textAlign: TextAlign.right,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
@@ -88,7 +93,6 @@ class CardCollectionContainer extends StatelessWidget {
                         ),
                         Text(
                           ' \$$totCost',
-                          textAlign: TextAlign.right,
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w800,
@@ -96,43 +100,14 @@ class CardCollectionContainer extends StatelessWidget {
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
-                )
+                ),
               ],
             ),
             const Divider(thickness: 0.3),
             const SizedBox(height: 16.0),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                double width = constraints.maxWidth;
-                int cardCount;
-
-                if (width > 300) {
-                  cardCount = 3;
-                } else if (width > 200) {
-                  cardCount = 2;
-                } else {
-                  cardCount = 1;
-                }
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(cardCount, (index) {
-                    return Flexible(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            right: width * 0.020, left: width * 0.020),
-                        child: CardImage(
-                          imageUrl:
-                              'https://images.pokemontcg.io/sm75/2_hires.png',
-                          count: 10,
-                        ),
-                      ),
-                    );
-                  }),
-                );
-              },
-            ),
+            PlaceholderCard(),
             const SizedBox(height: 16.0),
             Row(
               children: [

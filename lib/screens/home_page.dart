@@ -97,6 +97,7 @@ class _HomePageState extends State<HomePage> {
                           totCost: collection.totCost,
                           collectionName: collection.name,
                           collectionDescription: collection.description,
+                          collectionCardNumber: 0,
                         );
                       }).toList(),
                     ),
