@@ -25,15 +25,43 @@ class CardService {
           for (var card in response.data['data']) {
             cards.add(PokemonCard.fromJson(card as Map<String, dynamic>));
           }
-          yield cards;  // Emit updated list of cards
+          yield cards;
         } else {
-          // If the response status code is not 200, throw an error
           throw Exception('Error: Failed to load cards (Status Code: ${response.statusCode})');
         }
       } catch (e) {
-        // Yield an error instead of crashing the stream
         yield* Stream.error('Failed to load cards: $e');
-        return;  // Break the loop when an error occurs
+        return;
+      }
+      page += 1;
+    }
+  }
+
+  Stream<List<PokemonCard>> getTopValuedCards() async* {
+    List<PokemonCard> topCards = [];
+    int page = 1;
+    while (page < 6) {
+      try {
+        final response = await _dio.get(
+          '$_baseUrl/cards',
+          queryParameters: {
+            'q': 'rarity:Rare*',
+            'pageSize': 5,
+            'page': page,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          for (var card in response.data['data']) {
+            topCards.add(PokemonCard.fromJson(card as Map<String, dynamic>));
+          }
+          yield topCards;
+        } else {
+          throw Exception('Error: Failed to load top valued cards (Status Code: ${response.statusCode})');
+        }
+      } catch (e) {
+        yield* Stream.error('Failed to load top valued cards: $e');
+        return;
       }
       page += 1;
     }

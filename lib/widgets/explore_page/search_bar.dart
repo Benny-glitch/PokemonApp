@@ -160,21 +160,149 @@ class _AutoCompleteSearchWidgetStateExplorePage
             ],
           ),
         ),
-        const SizedBox(height: 10),
-        if (_suggestions.isNotEmpty)
-          Column(
-            children: _suggestions
-                .map((card) => ListTile(
-                      title: Text(
-                        card.name,
-                        style: const TextStyle(color: Colors.black),
+        Container(
+          margin: _suggestions.isEmpty
+              ? EdgeInsets.fromLTRB(0, 0, 0, 0)
+              : EdgeInsets.fromLTRB(0, 25.0, 0, 0),
+          decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              border: Border(
+                  top: BorderSide(color: Colors.grey.shade200, width: 1.5),
+                  bottom: BorderSide(color: Colors.grey.shade200, width: 1.5))),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            constraints: _suggestions.isEmpty
+                ? BoxConstraints(maxHeight: 0)
+                : BoxConstraints(maxHeight: 500),
+            child: _suggestions.isEmpty
+                ? SizedBox.shrink()
+                : ListView.builder(
+              itemCount: _suggestions.length,
+              itemBuilder: (context, index) {
+                final card = _suggestions[index];
+                return GestureDetector(
+                  onTap: () {
+                    _onSuggestionSelected(card);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 16.0),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: AspectRatio(
+                                aspectRatio: 0.7,
+                                child: card.images!.small
+                                    .toString()
+                                    .isNotEmpty
+                                    ? ClipRRect(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                  child: Image.network(
+                                    card.images!.small.toString(),
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error,
+                                        stackTrace) {
+                                      return Container(
+                                        color: Colors.grey[200],
+                                        child: Icon(
+                                          Icons.error,
+                                          color: Colors.red,
+                                          size: 48,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                                    : Container(
+                                  color: Colors.grey[200],
+                                  child: Icon(
+                                    Icons.error,
+                                    color: Colors.red,
+                                    size: 48,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 13,
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    card.name,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    '${card.set?.name}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .spaceBetween,
+                                        children: [
+                                          Text(
+                                            '${card.id}',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                          card.cardmarket?.prices
+                                              ?.averageSellPrice !=
+                                              null
+                                              ? Text(
+                                            '${card.cardmarket?.prices?.averageSellPrice}',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color:
+                                              Colors.grey[600],
+                                            ),
+                                          )
+                                              : Icon(
+                                            Icons.error,
+                                            color: Colors.red,
+                                            size: 48,
+                                          ),
+                                        ],
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      onTap: () => _onSuggestionSelected(card),
-                    ))
-                .toList(),
-          )
-        else
-          const SizedBox.shrink(),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
       ],
     );
   }

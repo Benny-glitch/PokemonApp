@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:pokemon_card_collector/screens/home_page.dart';
+import 'package:pokemon_card_collector/services/card_service.dart';
+import 'package:provider/provider.dart';
 
 import 'models/card_collection.dart';
 
@@ -12,7 +12,12 @@ Future<void> main() async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(CardCollectionAdapter());
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      Provider<CardService>(create: (_) => CardService()),
+    ],
+    child: MyApp(),
+  ),);
 }
 
 class MyApp extends StatelessWidget {

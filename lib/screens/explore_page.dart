@@ -1,6 +1,8 @@
-import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
+import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:pokemon_card_collector/widgets/explore_page/search_bar.dart';
+
+import '../widgets/explore_page/top_card_carousel.dart';
 
 class ExplorePage extends StatefulWidget {
   final FocusNode focusNode;
@@ -43,7 +45,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   color: Colors.white,
                 ),
               ),
-              AutoCompleteSearchWidgetExplorePage(focusNode: widget.focusNode), // Passa il FocusNode
+              AutoCompleteSearchWidgetExplorePage(focusNode: widget.focusNode),
               const SizedBox(height: 30),
               DynamicHeightGridView(
                 shrinkWrap: true,
@@ -54,10 +56,22 @@ class _ExplorePageState extends State<ExplorePage> {
                 itemCount: 4,
                 builder: (context, index) {
                   final buttonData = [
-                    {'label': 'Price', 'gradient': [Colors.red, Colors.redAccent]},
-                    {'label': 'Moves', 'gradient': [Colors.orange, Colors.deepOrangeAccent]},
-                    {'label': 'Evolutions', 'gradient': [Colors.greenAccent, Colors.green.shade700]},
-                    {'label': 'Types', 'gradient': [Colors.lightBlueAccent, Colors.blue.shade700]},
+                    {
+                      'label': 'Price',
+                      'gradient': [Colors.red, Colors.redAccent]
+                    },
+                    {
+                      'label': 'Moves',
+                      'gradient': [Colors.orange, Colors.deepOrangeAccent]
+                    },
+                    {
+                      'label': 'Evolutions',
+                      'gradient': [Colors.greenAccent, Colors.green.shade700]
+                    },
+                    {
+                      'label': 'Types',
+                      'gradient': [Colors.lightBlueAccent, Colors.blue.shade700]
+                    },
                   ];
 
                   return _buildGradientButton(
@@ -82,6 +96,8 @@ class _ExplorePageState extends State<ExplorePage> {
                 height: 1.0,
                 thickness: 0.4,
               ),
+              const SizedBox(height: 20),
+              TopCardsCarousel(),
             ],
           ),
         ),
@@ -89,7 +105,8 @@ class _ExplorePageState extends State<ExplorePage> {
     );
   }
 
-  Widget _buildGradientButton(BuildContext context, String label, List<Color> gradientColors) {
+  Widget _buildGradientButton(
+      BuildContext context, String label, List<Color> gradientColors) {
     return SizedBox(
       height: 70,
       child: Container(
