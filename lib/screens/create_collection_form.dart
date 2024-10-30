@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class CreateCollectionForm extends StatelessWidget {
+class CreateCollectionForm extends StatefulWidget {
   final VoidCallback onClose;
-  final Function(String, String) onSave;
+  final Function(String, String, bool) onSave;
 
   const CreateCollectionForm({
     super.key,
@@ -12,24 +12,33 @@ class CreateCollectionForm extends StatelessWidget {
   });
 
   @override
+  _CreateCollectionFormState createState() => _CreateCollectionFormState();
+}
+
+class _CreateCollectionFormState extends State<CreateCollectionForm> {
+  final TextEditingController collectionNameController =
+      TextEditingController();
+  final TextEditingController collectionDescriptionController =
+      TextEditingController();
+  bool _isPriority =
+      false; // Variabile per gestire la posizione della collezione
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      backgroundColor: Colors.redAccent,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController collectionNameController = TextEditingController();
-    final TextEditingController collectionDescriptionController = TextEditingController();
-
-    void showToast(String message) {
-      Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.TOP,
-        backgroundColor: Colors.redAccent,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    }
-
     return Positioned.fill(
       child: GestureDetector(
-        onTap: onClose,
+        onTap: widget.onClose,
         child: Container(
           color: Colors.black54,
           child: Center(
@@ -37,7 +46,7 @@ class CreateCollectionForm extends StatelessWidget {
               onTap: () {},
               child: Container(
                 width: 350,
-                height: 500,
+                height: 550,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -69,9 +78,10 @@ class CreateCollectionForm extends StatelessWidget {
                               Text(
                                 "Name",
                                 style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey.shade700),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey.shade700,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               TextField(
@@ -98,9 +108,10 @@ class CreateCollectionForm extends StatelessWidget {
                               Text(
                                 "Description (optional)",
                                 style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey.shade700),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey.shade700,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               TextField(
@@ -127,6 +138,38 @@ class CreateCollectionForm extends StatelessWidget {
                                 textAlign: TextAlign.left,
                               ),
                               const SizedBox(height: 20),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Show this collection first",
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                      ),
+                                      Switch(
+                                        value: _isPriority,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _isPriority = value;
+                                          });
+                                        },
+                                        activeColor: Colors.orangeAccent.shade700,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -137,14 +180,15 @@ class CreateCollectionForm extends StatelessWidget {
                       child: TextButton(
                         onPressed: () {
                           final String name = collectionNameController.text;
-                          final String description = collectionDescriptionController.text;
+                          final String description =
+                              collectionDescriptionController.text;
 
                           if (name.isEmpty) {
                             showToast("Collection name is required");
                             return;
                           }
 
-                          onSave(name, description);
+                          widget.onSave(name, description, _isPriority);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepOrange.shade50,

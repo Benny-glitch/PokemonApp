@@ -9,8 +9,7 @@ import '../widgets/home_page/carousel_notice.dart';
 import 'create_collection_form.dart';
 
 class HomePage extends StatefulWidget {
-  final DraggableScrollableController sheetController =
-  DraggableScrollableController();
+  final DraggableScrollableController sheetController = DraggableScrollableController();
 
   HomePage({super.key});
 
@@ -45,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _addNewCollection(String name, String description) {
+  void _addNewCollection(String name, String description, bool isPriority) {
     final newCollection = CardCollection(
       name: name,
       description: description,
@@ -54,7 +53,12 @@ class _HomePageState extends State<HomePage> {
     );
 
     setState(() {
-      _collections.add(newCollection);
+      // Se `isPriority` è true, aggiungi la collezione all'inizio, altrimenti alla fine
+      if (isPriority) {
+        _collections.insert(0, newCollection);
+      } else {
+        _collections.add(newCollection);
+      }
     });
 
     _collectionBox.add(newCollection);
@@ -125,8 +129,8 @@ class _HomePageState extends State<HomePage> {
           if (_isFormVisible)
             CreateCollectionForm(
               onClose: _toggleFormVisibility,
-              onSave: (String name, String description) {
-                _addNewCollection(name, description);
+              onSave: (String name, String description, bool isPriority) {
+                _addNewCollection(name, description, isPriority);
                 _toggleFormVisibility();
               },
             ),
@@ -135,4 +139,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
