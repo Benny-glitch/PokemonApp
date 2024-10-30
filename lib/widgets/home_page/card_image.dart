@@ -1,24 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_card_collector/models/card.dart';
 
 class CardImage extends StatelessWidget {
-  final String imageUrl;
+  final PokemonCard card;
   final int count;
 
-
-  const CardImage({required this.imageUrl, required this.count, super.key});
+  const CardImage({
+    required this.card,
+    required this.count,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+
     return SizedBox(
       child: Stack(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
-              imageUrl,
+              card.images?.large ?? '',  // Usa l'URL dell'immagine grande o un valore di default
               width: width * 0.45,
+              height: width * 0.6, // Regola l'altezza per mantenere le proporzioni
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => const Center(
+                child: Text(
+                  'Image not available',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
             ),
           ),
           Positioned(
@@ -31,7 +43,7 @@ class CardImage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Text(
-                '$count',
+                '$count',  // Mostra il numero di copie della carta
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

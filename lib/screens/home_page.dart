@@ -50,6 +50,7 @@ class _HomePageState extends State<HomePage> {
       name: name,
       description: description,
       totCost: 0,
+      cards: [],
     );
 
     setState(() {
@@ -98,6 +99,7 @@ class _HomePageState extends State<HomePage> {
                           collectionName: collection.name,
                           collectionDescription: collection.description,
                           collectionCardNumber: 0,
+                          cards: const [],
                         );
                       }).toList(),
                     ),

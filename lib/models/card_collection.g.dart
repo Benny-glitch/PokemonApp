@@ -20,19 +20,22 @@ class CardCollectionAdapter extends TypeAdapter<CardCollection> {
       name: fields[0] as String,
       description: fields[1] as String,
       totCost: fields[2] as double,
+      cards: (fields[3] as List).cast<PokemonCard>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, CardCollection obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
       ..write(obj.description)
       ..writeByte(2)
-      ..write(obj.totCost);
+      ..write(obj.totCost)
+      ..writeByte(3)
+      ..write(obj.cards);
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_card_collector/screens/collection_page.dart';
 import 'package:pokemon_card_collector/widgets/home_page/place_holder_card.dart';
+import '../../models/card.dart';
 import 'card_image.dart';
 
 class CardCollectionContainer extends StatelessWidget {
@@ -8,12 +9,14 @@ class CardCollectionContainer extends StatelessWidget {
   final String collectionName;
   final String collectionDescription;
   final int collectionCardNumber;
+  final List<PokemonCard> cards;
 
   const CardCollectionContainer({
     required this.totCost,
     required this.collectionName,
     required this.collectionDescription,
     required this.collectionCardNumber,
+    required this.cards,
     super.key,
   });
 
@@ -107,7 +110,18 @@ class CardCollectionContainer extends StatelessWidget {
             ),
             const Divider(thickness: 0.3),
             const SizedBox(height: 16.0),
-            PlaceholderCard(),
+            cards.isEmpty
+                ? const PlaceholderCard()
+                : Row(
+              children: cards
+                  .take(3)
+                  .map((card) => Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: CardImage(card: card, count: 0,),
+              ))
+                  .toList(),
+            ),
+
             const SizedBox(height: 16.0),
             Row(
               children: [
@@ -115,7 +129,7 @@ class CardCollectionContainer extends StatelessWidget {
                   flex: 14,
                   child: TextButton(
                     onPressed: () {
-                      // Add the logic
+                      // Aggiungi logica
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xffFDF7F4),
@@ -159,27 +173,6 @@ class CardCollectionContainer extends StatelessWidget {
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class DetailsPage extends StatelessWidget {
-  final double totCost;
-
-  const DetailsPage({required this.totCost, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Details Page'),
-      ),
-      body: Center(
-        child: Text(
-          'Details for \$ $totCost',
-          style: TextStyle(fontSize: 24),
         ),
       ),
     );
