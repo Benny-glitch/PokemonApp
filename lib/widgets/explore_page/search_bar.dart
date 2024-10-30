@@ -4,6 +4,11 @@ import '../../models/card.dart';
 import '../../services/card_service.dart';
 
 class AutoCompleteSearchWidgetExplorePage extends StatefulWidget {
+  final FocusNode focusNode;
+
+  const AutoCompleteSearchWidgetExplorePage({Key? key, required this.focusNode})
+      : super(key: key);
+
   @override
   _AutoCompleteSearchWidgetStateExplorePage createState() =>
       _AutoCompleteSearchWidgetStateExplorePage();
@@ -79,7 +84,6 @@ class _AutoCompleteSearchWidgetStateExplorePage
     _isSuggestionSelected = true;
 
     _controller.removeListener(_onSearchChanged);
-
     _subscription?.cancel();
 
     setState(() {
@@ -108,19 +112,20 @@ class _AutoCompleteSearchWidgetStateExplorePage
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(0,20,0,0),
+          padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
           child: Row(
             children: [
               Expanded(
                 child: TextField(
+                  focusNode: widget.focusNode,
                   controller: _controller,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
                   decoration: InputDecoration(
-                    hintText: 'Search for a card...',
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade700,
+                    hintText: 'Search for a card',
+                    hintStyle: const TextStyle(
+                      color: Colors.white30,
                       fontWeight: FontWeight.w300,
                     ),
                     filled: true,
@@ -131,7 +136,7 @@ class _AutoCompleteSearchWidgetStateExplorePage
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.transparent,
                         width: 2.0,
                       ),
@@ -140,162 +145,36 @@ class _AutoCompleteSearchWidgetStateExplorePage
                   ),
                 ),
               ),
+              const SizedBox(width: 10),
               if (_showCancelButton)
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: TextButton(
-                    onPressed: _clearSearch,
-                    child: Text('Cancel'),
+                TextButton(
+                  onPressed: _clearSearch,
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
             ],
           ),
         ),
-        Container(
-          margin: _suggestions.isEmpty
-              ? EdgeInsets.fromLTRB(0, 0, 0, 0)
-              : EdgeInsets.fromLTRB(0, 25.0, 0, 0),
-          decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              border: Border(
-                  top: BorderSide(color: Colors.grey.shade200, width: 1.5),
-                  bottom: BorderSide(color: Colors.grey.shade200, width: 1.5)
-              )
-          ),
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            constraints: _suggestions.isEmpty
-                ? BoxConstraints(maxHeight: 0)
-                : BoxConstraints(maxHeight: 500),
-            child: _suggestions.isEmpty
-                ? SizedBox.shrink()
-                : ListView.builder(
-                    itemCount: _suggestions.length,
-                    itemBuilder: (context, index) {
-                      final card = _suggestions[index];
-                      return GestureDetector(
-                        onTap: () {
-                          _onSuggestionSelected(card);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 16.0),
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.white),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: AspectRatio(
-                                      aspectRatio: 0.7,
-                                      child: card.images!.small
-                                              .toString()
-                                              .isNotEmpty
-                                          ? ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.network(
-                                                card.images!.small.toString(),
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (context, error,
-                                                    stackTrace) {
-                                                  return Container(
-                                                    color: Colors.grey[200],
-                                                    child: Icon(
-                                                      Icons.error,
-                                                      color: Colors.red,
-                                                      size: 48,
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            )
-                                          : Container(
-                                              color: Colors.grey[200],
-                                              child: Icon(
-                                                Icons.error,
-                                                color: Colors.red,
-                                                size: 48,
-                                              ),
-                                            ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 13,
-                                  ),
-                                  Expanded(
-                                    flex: 5,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          card.name,
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          '${card.set?.name}',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                        Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  '${card.id}',
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    color: Colors.grey[600],
-                                                  ),
-                                                ),
-                                                card.cardmarket?.prices
-                                                            ?.averageSellPrice !=
-                                                        null
-                                                    ? Text(
-                                                        '${card.cardmarket?.prices?.averageSellPrice}',
-                                                        style: TextStyle(
-                                                          fontSize: 20,
-                                                          color:
-                                                              Colors.grey[600],
-                                                        ),
-                                                      )
-                                                    : Icon(
-                                                        Icons.error,
-                                                        color: Colors.red,
-                                                        size: 48,
-                                                      ),
-                                              ],
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-          ),
-        ),
+        const SizedBox(height: 10),
+        if (_suggestions.isNotEmpty)
+          Column(
+            children: _suggestions
+                .map((card) => ListTile(
+                      title: Text(
+                        card.name,
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                      onTap: () => _onSuggestionSelected(card),
+                    ))
+                .toList(),
+          )
+        else
+          const SizedBox.shrink(),
       ],
     );
   }

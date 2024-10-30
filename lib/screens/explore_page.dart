@@ -1,11 +1,17 @@
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_card_collector/widgets/explore_page/search_bar.dart';
 
-class ExplorePage extends StatelessWidget {
-  const ExplorePage({super.key});
+class ExplorePage extends StatefulWidget {
+  final FocusNode focusNode;
 
+  const ExplorePage({super.key, required this.focusNode});
+
+  @override
+  _ExplorePageState createState() => _ExplorePageState();
+}
+
+class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,30 +43,30 @@ class ExplorePage extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              AutoCompleteSearchWidgetExplorePage(),
+              AutoCompleteSearchWidgetExplorePage(focusNode: widget.focusNode), // Passa il FocusNode
               const SizedBox(height: 30),
               DynamicHeightGridView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  itemCount: 4,
-                  builder: (context, index) {
-                    final buttonData = [
-                      {'label': 'Price', 'gradient': [Colors.red, Colors.redAccent]},
-                      {'label': 'Moves', 'gradient': [Colors.orange, Colors.deepOrangeAccent]},
-                      {'label': 'Evolutions', 'gradient': [Colors.greenAccent, Colors.green.shade700]},
-                      {'label': 'Types', 'gradient': [Colors.lightBlueAccent, Colors.blue.shade700]},
-                    ];
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+                itemCount: 4,
+                builder: (context, index) {
+                  final buttonData = [
+                    {'label': 'Price', 'gradient': [Colors.red, Colors.redAccent]},
+                    {'label': 'Moves', 'gradient': [Colors.orange, Colors.deepOrangeAccent]},
+                    {'label': 'Evolutions', 'gradient': [Colors.greenAccent, Colors.green.shade700]},
+                    {'label': 'Types', 'gradient': [Colors.lightBlueAccent, Colors.blue.shade700]},
+                  ];
 
-                    return _buildGradientButton(
-                      context,
-                      buttonData[index]['label'] as String,
-                      buttonData[index]['gradient'] as List<Color>,
-                    );
-                  },
-                ),
+                  return _buildGradientButton(
+                    context,
+                    buttonData[index]['label'] as String,
+                    buttonData[index]['gradient'] as List<Color>,
+                  );
+                },
+              ),
               const SizedBox(height: 30),
               const Text(
                 'Top cards',
@@ -96,9 +102,7 @@ class ExplorePage extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: ElevatedButton(
-          onPressed: () {
-
-          },
+          onPressed: () {},
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,

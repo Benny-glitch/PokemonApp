@@ -11,6 +11,7 @@ import 'create_collection_form.dart';
 class HomePage extends StatefulWidget {
   final DraggableScrollableController sheetController =
   DraggableScrollableController();
+  final FocusNode searchFocusNode = FocusNode(); // Aggiungi un FocusNode
 
   HomePage({super.key});
 
@@ -23,7 +24,6 @@ class _HomePageState extends State<HomePage> {
   bool _isFormVisible = false;
 
   final List<CardCollection> _collections = [];
-
   late Box<CardCollection> _collectionBox;
 
   @override
@@ -59,6 +59,15 @@ class _HomePageState extends State<HomePage> {
     _collectionBox.add(newCollection);
   }
 
+  void _switchPage(int index) {
+    if (index != _currentPageIndex) {
+      widget.searchFocusNode.unfocus();
+      setState(() {
+        _currentPageIndex = index;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,6 +88,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.grey,
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           IndexedStack(
@@ -104,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              const ExplorePage(),
+              ExplorePage(focusNode: widget.searchFocusNode),
             ],
           ),
           Positioned(
@@ -114,9 +124,7 @@ class _HomePageState extends State<HomePage> {
             child: BottomFixedWidget(
               onCreateCollectionTap: _toggleFormVisibility,
               onSwitchChange: (bool isExplore) {
-                setState(() {
-                  _currentPageIndex = isExplore ? 0 : 1;
-                });
+                _switchPage(isExplore ? 0 : 1);
               },
             ),
           ),
@@ -133,4 +141,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
