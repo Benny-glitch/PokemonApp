@@ -3,6 +3,7 @@ import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:pokemon_card_collector/widgets/explore_page/search_bar.dart';
 
 import '../widgets/explore_page/top_card_carousel.dart';
+import '../widgets/home_page/bottom_fixed_widget.dart';
 
 class ExplorePage extends StatefulWidget {
   final FocusNode focusNode;
@@ -31,7 +32,7 @@ class _ExplorePageState extends State<ExplorePage> {
       child: SizedBox(
         height: double.infinity,
         width: double.infinity,
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24.0, 32.0, 24.0, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,6 +99,10 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
               const SizedBox(height: 20),
               TopCardsCarousel(),
+              Padding(
+                padding: const EdgeInsets.only(
+                    bottom: BottomFixedWidget.height),
+              )
             ],
           ),
         ),

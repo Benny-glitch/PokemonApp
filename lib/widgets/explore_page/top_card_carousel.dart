@@ -23,7 +23,7 @@ class TopCardsCarousel extends StatelessWidget {
           final topCards = snapshot.data!;
           return CarouselSlider(
             options: CarouselOptions(
-              height: 180,
+              height: 550,
               enableInfiniteScroll: true,
               autoPlay: true,
               autoPlayInterval: const Duration(seconds: 3),
@@ -41,9 +41,10 @@ class TopCardsCarousel extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.network(
-                          card.images?.large ?? 'https://via.placeholder.com/150',
-                          height: 100,
-                          width: 500,
+                          card.images?.large ??
+                              'https://via.placeholder.com/150',
+                          height: 400,
+                          width: 550,
                           fit: BoxFit.cover,
                         ),
                         const SizedBox(height: 10),
