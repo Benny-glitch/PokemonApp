@@ -19,7 +19,7 @@ class CollectionPage extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white60,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: Colors.white,

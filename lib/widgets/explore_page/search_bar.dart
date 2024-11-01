@@ -4,10 +4,7 @@ import '../../models/card.dart';
 import '../../services/card_service.dart';
 
 class AutoCompleteSearchWidgetExplorePage extends StatefulWidget {
-  final FocusNode focusNode;
-
-  const AutoCompleteSearchWidgetExplorePage({Key? key, required this.focusNode})
-      : super(key: key);
+  const AutoCompleteSearchWidgetExplorePage({Key? key}) : super(key: key);
 
   @override
   _AutoCompleteSearchWidgetStateExplorePage createState() =>
@@ -40,40 +37,27 @@ class _AutoCompleteSearchWidgetStateExplorePage
   }
 
   void _onSearchChanged() {
-    if (_isSuggestionSelected) {
-      return;
-    }
+    if (_isSuggestionSelected) return;
 
     setState(() {
       _showCancelButton = _controller.text.isNotEmpty;
     });
 
     if (_controller.text.isEmpty) {
-      setState(() {
-        _suggestions = [];
-      });
+      setState(() => _suggestions = []);
       _debounce?.cancel();
       _subscription?.cancel();
       return;
     }
 
-    if (_debounce?.isActive ?? false) {
-      _debounce!.cancel();
-    }
-
+    _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
       final pattern = _controller.text;
-
       if (pattern.isNotEmpty) {
         _subscription?.cancel();
-
-        final stream = _cardService.searchCards(pattern);
-
-        _subscription = stream.listen((cards) {
+        _subscription = _cardService.searchCards(pattern).listen((cards) {
           if (!_isSuggestionSelected) {
-            setState(() {
-              _suggestions = cards;
-            });
+            setState(() => _suggestions = cards);
           }
         });
       }
@@ -82,10 +66,8 @@ class _AutoCompleteSearchWidgetStateExplorePage
 
   void _onSuggestionSelected(PokemonCard card) {
     _isSuggestionSelected = true;
-
     _controller.removeListener(_onSearchChanged);
     _subscription?.cancel();
-
     setState(() {
       _controller.text = card.name;
       _suggestions = [];
@@ -109,43 +91,42 @@ class _AutoCompleteSearchWidgetStateExplorePage
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-          child: Row(
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Row(
             children: [
               Expanded(
-                child: TextField(
-                  focusNode: widget.focusNode,
-                  controller: _controller,
-                  style: const TextStyle(
-                    color: Colors.white,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade900,
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  decoration: InputDecoration(
-                    hintText: 'Search for a card',
-                    hintStyle: const TextStyle(
-                      color: Colors.white30,
-                      fontWeight: FontWeight.w300,
-                    ),
-                    filled: true,
-                    fillColor: Colors.grey.shade900,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(
-                        color: Colors.transparent,
-                        width: 2.0,
+                  padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 4.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.search_rounded, color: Colors.white),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: TextField(
+                          controller: _controller,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: const InputDecoration(
+                            hintText: 'Search for a card',
+                            hintStyle: TextStyle(
+                              color: Colors.white54,
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.0,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        ),
                       ),
-                    ),
-                    prefixIcon: const Icon(Icons.search),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
               if (_showCancelButton)
                 TextButton(
                   onPressed: _clearSearch,
@@ -159,63 +140,43 @@ class _AutoCompleteSearchWidgetStateExplorePage
                 ),
             ],
           ),
-        ),
-        Container(
-          margin: _suggestions.isEmpty
-              ? EdgeInsets.fromLTRB(0, 0, 0, 0)
-              : EdgeInsets.fromLTRB(0, 25.0, 0, 0),
-          decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              border: Border(
-                  top: BorderSide(color: Colors.grey.shade200, width: 1.5),
-                  bottom: BorderSide(color: Colors.grey.shade200, width: 1.5))),
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            constraints: _suggestions.isEmpty
-                ? BoxConstraints(maxHeight: 0)
-                : BoxConstraints(maxHeight: 500),
-            child: _suggestions.isEmpty
-                ? SizedBox.shrink()
-                : ListView.builder(
+          const SizedBox(height: 10),
+          Container(
+            height: _suggestions.isEmpty
+            ? 0
+            : MediaQuery.of(context).size.height * 0.85,
+            child: ListView.builder(
               itemCount: _suggestions.length,
               itemBuilder: (context, index) {
                 final card = _suggestions[index];
                 return GestureDetector(
-                  onTap: () {
-                    _onSuggestionSelected(card);
-                  },
+                  onTap: () => _onSuggestionSelected(card),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 16.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 16.0),
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white),
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white,
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               flex: 1,
                               child: AspectRatio(
                                 aspectRatio: 0.7,
-                                child: card.images!.small
-                                    .toString()
-                                    .isNotEmpty
-                                    ? ClipRRect(
-                                  borderRadius:
-                                  BorderRadius.circular(10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
                                   child: Image.network(
-                                    card.images!.small.toString(),
+                                    card.images?.small ?? '',
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error,
-                                        stackTrace) {
+                                    errorBuilder: (context, error, stackTrace) {
                                       return Container(
                                         color: Colors.grey[200],
-                                        child: Icon(
+                                        child: const Icon(
                                           Icons.error,
                                           color: Colors.red,
                                           size: 48,
@@ -223,36 +184,25 @@ class _AutoCompleteSearchWidgetStateExplorePage
                                       );
                                     },
                                   ),
-                                )
-                                    : Container(
-                                  color: Colors.grey[200],
-                                  child: Icon(
-                                    Icons.error,
-                                    color: Colors.red,
-                                    size: 48,
-                                  ),
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              width: 13,
-                            ),
+                            const SizedBox(width: 13),
                             Expanded(
                               flex: 5,
                               child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     card.name,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(height: 5),
+                                  const SizedBox(height: 5),
                                   Text(
-                                    '${card.set?.name}',
+                                    card.set?.name ?? '',
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.grey[600],
@@ -302,8 +252,9 @@ class _AutoCompleteSearchWidgetStateExplorePage
               },
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
+
 }
