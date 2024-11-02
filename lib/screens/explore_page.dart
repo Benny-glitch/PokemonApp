@@ -20,7 +20,7 @@ class _ExplorePageState extends State<ExplorePage> {
       context,
       PageRouteBuilder(
         pageBuilder: (_, __, ___) => SearchPage(),
-        transitionDuration: const Duration(milliseconds: 400),
+        transitionDuration: const Duration(milliseconds: 600),
         transitionsBuilder: (_, animation, __, child) {
           return FadeTransition(
             opacity: animation,

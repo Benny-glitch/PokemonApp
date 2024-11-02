@@ -27,19 +27,22 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-      ),
-      body: Column(
+          backgroundColor: Colors.black, automaticallyImplyLeading: false),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(12.0, 0, 12.0, 0),
+        child: Column(
           children: [
             Hero(
               tag: 'searchBarHero',
               child: Material(
                 color: Colors.transparent,
-                child: AutoCompleteSearchWidgetExplorePage(appBarHeight: appBarHeight, height: height),
+                child: AutoCompleteSearchWidgetExplorePage(
+                    appBarHeight: appBarHeight, height: height),
               ),
             ),
           ],
         ),
+      ),
       backgroundColor: Colors.black,
     );
   }

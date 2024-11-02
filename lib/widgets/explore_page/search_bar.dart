@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../models/card.dart';
+import '../../screens/card_detail_page.dart';
 import '../../services/card_service.dart';
 
 class AutoCompleteSearchWidgetExplorePage extends StatefulWidget {
@@ -16,6 +17,7 @@ class AutoCompleteSearchWidgetExplorePage extends StatefulWidget {
 
 class _AutoCompleteSearchWidgetStateExplorePage
     extends State<AutoCompleteSearchWidgetExplorePage> {
+  bool _showBackArrow = false;
   final TextEditingController _controller = TextEditingController();
   final CardService _cardService = CardService();
   List<PokemonCard> _suggestions = [];
@@ -44,6 +46,7 @@ class _AutoCompleteSearchWidgetStateExplorePage
 
     setState(() {
       _showCancelButton = _controller.text.isNotEmpty;
+      _showBackArrow = _controller.text.isNotEmpty;
     });
 
     if (_controller.text.isEmpty) {
@@ -71,23 +74,26 @@ class _AutoCompleteSearchWidgetStateExplorePage
     _isSuggestionSelected = true;
     _controller.removeListener(_onSearchChanged);
     _subscription?.cancel();
-    setState(() {
-      _controller.text = card.name;
-      _suggestions = [];
-      _showCancelButton = false;
-    });
 
     Future.delayed(const Duration(milliseconds: 100), () {
       _controller.addListener(_onSearchChanged);
       _isSuggestionSelected = false;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CardDetailPage(card: card),
+        ),
+      );
     });
   }
+
 
   void _clearSearch() {
     setState(() {
       _controller.clear();
       _suggestions = [];
       _showCancelButton = false;
+      _showBackArrow = false;
     });
     _subscription?.cancel();
   }
@@ -99,7 +105,6 @@ class _AutoCompleteSearchWidgetStateExplorePage
     return SingleChildScrollView(
       child: Column(
         children: [
-          // Search bar
           SizedBox(
             height: searchBarHeight,
             child: Row(
@@ -110,10 +115,18 @@ class _AutoCompleteSearchWidgetStateExplorePage
                       color: Colors.grey.shade900,
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 13.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 4.5),
                     child: Row(
                       children: [
-                        const Icon(Icons.search_rounded, color: Colors.white),
+                        if (_showBackArrow)
+                          IconButton(
+                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        else
+                          const Icon(Icons.search_rounded, color: Colors.white),
                         const SizedBox(width: 16),
                         Expanded(
                           child: TextField(
@@ -132,6 +145,7 @@ class _AutoCompleteSearchWidgetStateExplorePage
                         ),
                       ],
                     ),
+
                   ),
                 ),
                 if (_showCancelButton)
@@ -148,7 +162,6 @@ class _AutoCompleteSearchWidgetStateExplorePage
               ],
             ),
           ),
-          // Suggestions List
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             height: _suggestions.isEmpty ? 0 : MediaQuery.of(context).size.height - searchBarHeight - widget.height - widget.appBarHeight,
@@ -163,14 +176,14 @@ class _AutoCompleteSearchWidgetStateExplorePage
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 1.0),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey.shade300),
                         borderRadius: BorderRadius.circular(15),
                         color: Colors.white,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(4.0),
+                        padding: const EdgeInsets.all(3.0),
                         child: Row(
                           children: [
                             Expanded(
