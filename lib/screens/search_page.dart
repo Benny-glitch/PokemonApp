@@ -22,31 +22,24 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final double appBarHeight = AppBar().preferredSize.height;
+    final double height = MediaQuery.of(context).viewPadding.top;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        automaticallyImplyLeading: true,
-        elevation: 0,
       ),
-      body: const Padding(
-        padding: EdgeInsets.fromLTRB(0, 12.0, 0, 0),
-        child: SizedBox(
-          height: double.infinity,
-          width: double.infinity,
-          child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Hero(
-                  tag: 'searchBarHero',
-                  child: Material(
-                    color: Colors.transparent,
-                    child: AutoCompleteSearchWidgetExplorePage(),
-                    ),
-                ),
-              ],
+      body: Column(
+          children: [
+            Hero(
+              tag: 'searchBarHero',
+              child: Material(
+                color: Colors.transparent,
+                child: AutoCompleteSearchWidgetExplorePage(appBarHeight: appBarHeight, height: height),
+              ),
             ),
+          ],
         ),
-      ),
       backgroundColor: Colors.black,
     );
   }

@@ -4,7 +4,10 @@ import '../../models/card.dart';
 import '../../services/card_service.dart';
 
 class AutoCompleteSearchWidgetExplorePage extends StatefulWidget {
-  const AutoCompleteSearchWidgetExplorePage({Key? key}) : super(key: key);
+  final double appBarHeight;
+  final double height;
+
+  const AutoCompleteSearchWidgetExplorePage({Key? key, required this.appBarHeight, required this.height}) : super(key: key);
 
   @override
   _AutoCompleteSearchWidgetStateExplorePage createState() =>
@@ -91,61 +94,67 @@ class _AutoCompleteSearchWidgetStateExplorePage
 
   @override
   Widget build(BuildContext context) {
+    const double searchBarHeight = 60.0;
+
     return SingleChildScrollView(
       child: Column(
-        mainAxisSize: MainAxisSize.max,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade900,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 4.0),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.search_rounded, color: Colors.white),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: TextField(
-                          controller: _controller,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: const InputDecoration(
-                            hintText: 'Search for a card',
-                            hintStyle: TextStyle(
-                              color: Colors.white54,
-                              fontWeight: FontWeight.w300,
-                              fontSize: 18.0,
+          // Search bar
+          SizedBox(
+            height: searchBarHeight,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade900,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 13.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.search_rounded, color: Colors.white),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: TextField(
+                            controller: _controller,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: 'Search for a card',
+                              hintStyle: TextStyle(
+                                color: Colors.white54,
+                                fontWeight: FontWeight.w300,
+                                fontSize: 18.0,
+                              ),
+                              border: InputBorder.none,
                             ),
-                            border: InputBorder.none,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              if (_showCancelButton)
-                TextButton(
-                  onPressed: _clearSearch,
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                      ],
                     ),
                   ),
                 ),
-            ],
+                if (_showCancelButton)
+                  TextButton(
+                    onPressed: _clearSearch,
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
-          const SizedBox(height: 10),
-          Container(
-            height: _suggestions.isEmpty
-            ? 0
-            : MediaQuery.of(context).size.height * 0.85,
+          // Suggestions List
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            height: _suggestions.isEmpty ? 0 : MediaQuery.of(context).size.height - searchBarHeight - widget.height - widget.appBarHeight,
+            curve: Curves.easeInOut,
             child: ListView.builder(
+              physics: _suggestions.isEmpty ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics(),
               itemCount: _suggestions.length,
               itemBuilder: (context, index) {
                 final card = _suggestions[index];
@@ -161,7 +170,7 @@ class _AutoCompleteSearchWidgetStateExplorePage
                         color: Colors.white,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(4.0),
                         child: Row(
                           children: [
                             Expanded(
@@ -209,37 +218,33 @@ class _AutoCompleteSearchWidgetStateExplorePage
                                     ),
                                   ),
                                   Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Text(
-                                            '${card.id}',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.grey[600],
-                                            ),
+                                    alignment: Alignment.bottomCenter,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          card.id,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.grey[600],
                                           ),
-                                          card.cardmarket?.prices
-                                              ?.averageSellPrice !=
-                                              null
-                                              ? Text(
-                                            '${card.cardmarket?.prices?.averageSellPrice}',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              color:
-                                              Colors.grey[600],
-                                            ),
-                                          )
-                                              : Icon(
-                                            Icons.error,
-                                            color: Colors.red,
-                                            size: 48,
+                                        ),
+                                        card.cardmarket?.prices?.averageSellPrice != null
+                                            ? Text(
+                                          '${card.cardmarket?.prices?.averageSellPrice}',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.grey[600],
                                           ),
-                                        ],
-                                      )),
+                                        )
+                                            : const Icon(
+                                          Icons.error,
+                                          color: Colors.red,
+                                          size: 48,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -256,5 +261,4 @@ class _AutoCompleteSearchWidgetStateExplorePage
       ),
     );
   }
-
 }
