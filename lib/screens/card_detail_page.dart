@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:pokemon_card_collector/screens/add_card_a_collection_form.dart';
 import '../../models/card.dart';
 
 class CardDetailPage extends StatefulWidget {
@@ -17,8 +18,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
   bool isSheetDragged = false;
   final DraggableScrollableController _draggableController = DraggableScrollableController();
 
-  // Imposta la dimensione iniziale del foglio
-  final double initialChildSize = 0.4;
+  final double initialChildSize = 0.45;
 
   @override
   void initState() {
@@ -52,7 +52,6 @@ class _CardDetailPageState extends State<CardDetailPage> {
 
   void _handleDraggableSheet() {
     setState(() {
-      // Cambia colore solo se lo sheet è stato trascinato oltre la posizione iniziale
       isSheetDragged = _draggableController.size > initialChildSize;
     });
   }
@@ -68,6 +67,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
       extendBodyBehindAppBar: true,
       backgroundColor: dominantColor,
       appBar: AppBar(
+        centerTitle: true,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: screenHeight * 0.1,
@@ -82,7 +82,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
           },
           icon: Icon(
             Icons.arrow_back_ios_new_outlined,
-            size: screenWidth * 0.06,
+            size: screenWidth * 0.065,
             color: Colors.grey.shade200,
           ),
         ),
@@ -91,7 +91,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
             icon: Icon(
               isFavorite ? Icons.favorite : Icons.favorite_border,
               color: Colors.grey.shade600,
-              size: screenWidth * 0.06,
+              size: screenWidth * 0.075,
             ),
             onPressed: _toggleFavorite,
           ),
@@ -160,7 +160,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
           ),
           DraggableScrollableSheet(
             initialChildSize: initialChildSize,
-            minChildSize: 0.4,
+            minChildSize: 0.45,
             maxChildSize: 0.65,
             controller: _draggableController,
             builder: (BuildContext context, ScrollController scrollController) {
@@ -216,6 +216,10 @@ class _CardDetailPageState extends State<CardDetailPage> {
               );
             },
           ),
+          if (isFavorite)
+            AddCardACollectionForm(
+              onClose: _toggleFavorite,
+            ),
         ],
       ),
     );
