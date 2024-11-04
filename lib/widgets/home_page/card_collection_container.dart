@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:pokemon_card_collector/models/card_collection.dart';
 import 'package:pokemon_card_collector/screens/collection_page.dart';
 import 'package:pokemon_card_collector/widgets/home_page/place_holder_card.dart';
 import '../../models/card.dart';
 import 'card_image.dart';
 
 class CardCollectionContainer extends StatelessWidget {
-  final double totCost;
   final String collectionName;
   final String collectionDescription;
   final int collectionCardNumber;
   final List<PokemonCard> cards;
 
   const CardCollectionContainer({
-    required this.totCost,
     required this.collectionName,
     required this.collectionDescription,
     required this.collectionCardNumber,
     required this.cards,
     super.key,
   });
+
+  Future<List<PokemonCard>> _fetchCardsFromCollection() async {
+    var box = await Hive.openBox<CardCollection>('card_collections');
+    var collection = box.values.firstWhere((c) => c.name == collectionName);
+    return collection != null ? collection.cards : [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,75 +60,115 @@ class CardCollectionContainer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '$collectionName ',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '$collectionCardNumber ITEMS',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Total value',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade400,
-                      ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
+                ValueListenableBuilder(
+                  valueListenable: Hive.box<CardCollection>('card_collections').listenable(),
+                  builder: (context, Box<CardCollection> box, _) {
+                    var collection = box.values.firstWhere((c) =>
+                    c.name == collectionName);
+                    int numCards = collection.cards.length;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Transform.rotate(
-                          angle: -1.5708,
-                          child: Icon(
-                            Icons.arrow_outward,
-                            color: Colors.green,
-                            size: 15,
+                        Text(
+                          '$collectionName ',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          ' \$$totCost',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.black,
+                          '$numCards ITEMS',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
                           ),
                         ),
                       ],
-                    ),
-                  ],
+                    );
+                  }
+                ),
+                ValueListenableBuilder(
+                  valueListenable: Hive.box<CardCollection>('card_collections').listenable(),
+                  builder: (context, Box<CardCollection> box, _) {
+                    var collection = box.values.firstWhere((c) => c.name == collectionName);
+                    double totCost = collection.totCost;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const Text(
+                          'Total value',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Transform.rotate(
+                              angle: -1.5708,
+                              child: const Icon(
+                                Icons.arrow_outward,
+                                color: Colors.green,
+                                size: 15,
+                              ),
+                            ),
+                            Text(
+                              ' \$$totCost',
+                              style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
             const Divider(thickness: 0.3),
             const SizedBox(height: 16.0),
-            cards.isEmpty
-                ? const PlaceholderCard()
-                : Row(
-              children: cards
-                  .take(3)
-                  .map((card) => Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: CardImage(card: card, count: 0,),
-              ))
-                  .toList(),
-            ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                double width = constraints.maxWidth;
+                int cardsToShow;
 
+                if (width > 300) {
+                  cardsToShow = 3;
+                } else if (width > 200) {
+                  cardsToShow = 2;
+                } else {
+                  cardsToShow = 1;
+                }
+
+                return FutureBuilder<List<PokemonCard>>(
+                  future: _fetchCardsFromCollection(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: snapshot.data!
+                            .take(cardsToShow)
+                            .map((card) => Padding(
+                          padding: EdgeInsets.only(right: width * 0.020, left: width * 0.020),
+                          child: CardImage(card: card, count: 0),
+                        ))
+                            .toList(),
+                      );
+                    } else {
+                      return const PlaceholderCard();
+                    }
+                  },
+                );
+              },
+            ),
             const SizedBox(height: 16.0),
             Row(
               children: [
@@ -129,7 +176,7 @@ class CardCollectionContainer extends StatelessWidget {
                   flex: 14,
                   child: TextButton(
                     onPressed: () {
-                      // Aggiungi logica
+                      // Logica per aggiungere carte
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xffFDF7F4),

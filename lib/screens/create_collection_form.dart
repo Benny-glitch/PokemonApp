@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class CreateCollectionForm extends StatefulWidget {
   final VoidCallback onClose;
-  final Function(String, String, bool) onSave;
+  final Function(String, String) onSave;
 
   const CreateCollectionForm({
     super.key,
@@ -188,7 +188,7 @@ class _CreateCollectionFormState extends State<CreateCollectionForm> {
                             return;
                           }
 
-                          widget.onSave(name, description, _isPriority);
+                          widget.onSave(name, description);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepOrange.shade50,

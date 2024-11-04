@@ -106,7 +106,6 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: _collections.map((collection) {
                         return CardCollectionContainer(
-                          totCost: collection.totCost,
                           collectionName: collection.name,
                           collectionDescription: collection.description,
                           collectionCardNumber: 0,

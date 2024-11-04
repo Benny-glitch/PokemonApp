@@ -21,6 +21,6 @@ class CardCollection {
     required this.name,
     required this.description,
     required this.totCost,
-    this.cards =  const [],
-  });
+    List<PokemonCard>? cards,
+  }) : cards = cards ?? [];
 }

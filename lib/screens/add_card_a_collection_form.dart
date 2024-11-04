@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../models/card.dart';
 import '../models/card_collection.dart';
 
 class AddCardACollectionForm extends StatefulWidget {
   final VoidCallback onClose;
+  final PokemonCard card;
 
   const AddCardACollectionForm({
     super.key,
     required this.onClose,
+    required this.card,
   });
 
   @override
   _AddCardACollectionFormState createState() => _AddCardACollectionFormState();
 }
 
+
 class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
   late Box<CardCollection> _collectionBox;
-  final Map<String, bool> _selectedCollections = {};
+  final Map<int, bool> _selectedCollections = {};
   bool isLoading = true;
 
   @override
@@ -29,9 +33,12 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
   Future<void> _openBox() async {
     try {
       _collectionBox = await Hive.openBox<CardCollection>('card_collections');
-      _collectionBox.values.forEach((collection) {
-        _selectedCollections[collection.name] = false;
-      });
+      for (int index = 0; index < _collectionBox.length; index++) {
+        final collection = _collectionBox.getAt(index);
+        if (collection != null) {
+          _selectedCollections[index] = false;
+        }
+      }
     } catch (error) {
       showToast("Errore durante il caricamento dei dati.");
     } finally {
@@ -121,10 +128,10 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
         return CheckboxListTile(
           title: Text(collection!.name),
           subtitle: Text(collection.description),
-          value: _selectedCollections[collection.name],
+          value: _selectedCollections[index],  // Usa l'indice del Box come chiave
           onChanged: (bool? value) {
             setState(() {
-              _selectedCollections[collection.name] = value ?? false;
+              _selectedCollections[index] = value ?? false;  // Salva lo stato usando l'indice
             });
           },
         );
@@ -133,17 +140,38 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
   }
 
   void _saveSelectedCollections() {
-    final selectedNames = _selectedCollections.entries
+    final selectedIndexes = _selectedCollections.entries
         .where((entry) => entry.value)
         .map((entry) => entry.key)
         .toList();
 
-    if (selectedNames.isNotEmpty) {
+    if (selectedIndexes.isNotEmpty) {
+      for (var index in selectedIndexes) {
+        final collection = _collectionBox.getAt(index);
+        if (collection != null) {
+          if (!collection.cards.contains(widget.card)) {
+            final updatedCards = List<PokemonCard>.from(collection.cards)
+              ..add(widget.card);
+
+            _collectionBox.putAt(
+              index,
+              CardCollection(
+                name: collection.name,
+                description: collection.description,
+                totCost: collection.totCost + (widget.card.cardmarket?.prices?.averageSellPrice ?? 0),
+                cards: updatedCards,
+              ),
+            );
+          }
+        }
+      }
+
       showToast("Card saved to selected collections!");
+      widget.onClose();
     } else {
       showToast("Please select at least one collection.");
     }
-
-
   }
+
+
 }

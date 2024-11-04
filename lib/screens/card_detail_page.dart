@@ -219,6 +219,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
           if (isFavorite)
             AddCardACollectionForm(
               onClose: _toggleFavorite,
+              card: widget.card,
             ),
         ],
       ),

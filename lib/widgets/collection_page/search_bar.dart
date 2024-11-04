@@ -11,7 +11,6 @@ class AutoCompleteSearchWidget extends StatefulWidget {
 
 class _AutoCompleteSearchWidgetState extends State<AutoCompleteSearchWidget> {
   final TextEditingController _controller = TextEditingController();
-  final CardService _cardService = CardService();
   List<PokemonCard> _suggestions = [];
   Timer? _debounce;
   bool _isSuggestionSelected = false;

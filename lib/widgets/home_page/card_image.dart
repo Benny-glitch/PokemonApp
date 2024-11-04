@@ -16,15 +16,17 @@ class CardImage extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return SizedBox(
+      width: width * 0.23,
+      height: width * 0.33,
       child: Stack(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
-              card.images?.large ?? '',  // Usa l'URL dell'immagine grande o un valore di default
-              width: width * 0.45,
-              height: width * 0.6, // Regola l'altezza per mantenere le proporzioni
-              fit: BoxFit.cover,
+              card.images?.large ?? '',
+              width: width * 0.23,
+              height: width * 0.33,
+              fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) => const Center(
                 child: Text(
                   'Image not available',
@@ -43,7 +45,7 @@ class CardImage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Text(
-                '$count',  // Mostra il numero di copie della carta
+                '$count',
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

@@ -3,6 +3,604 @@
 part of 'card.dart';
 
 // **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class PokemonCardAdapter extends TypeAdapter<PokemonCard> {
+  @override
+  final int typeId = 1;
+
+  @override
+  PokemonCard read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return PokemonCard(
+      id: fields[0] as String,
+      name: fields[1] as String,
+      supertype: fields[2] as String,
+      subtypes: (fields[3] as List?)?.cast<String>(),
+      hp: fields[4] as String?,
+      types: (fields[5] as List?)?.cast<String>(),
+      abilities: (fields[6] as List?)?.cast<Ability>(),
+      attacks: (fields[7] as List?)?.cast<Attack>(),
+      weaknesses: (fields[8] as List?)?.cast<Weakness>(),
+      retreatCost: (fields[9] as List?)?.cast<String>(),
+      convertedRetreatCost: fields[10] as int?,
+      set: fields[11] as CardSet?,
+      number: fields[12] as String?,
+      artist: fields[13] as String?,
+      rarity: fields[14] as String?,
+      nationalPokedexNumbers: (fields[15] as List?)?.cast<int>(),
+      legalities: fields[16] as Legalities?,
+      images: fields[17] as CardImages?,
+      tcgplayer: fields[18] as TcgPlayer?,
+      cardmarket: fields[19] as CardMarket?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, PokemonCard obj) {
+    writer
+      ..writeByte(20)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.supertype)
+      ..writeByte(3)
+      ..write(obj.subtypes)
+      ..writeByte(4)
+      ..write(obj.hp)
+      ..writeByte(5)
+      ..write(obj.types)
+      ..writeByte(6)
+      ..write(obj.abilities)
+      ..writeByte(7)
+      ..write(obj.attacks)
+      ..writeByte(8)
+      ..write(obj.weaknesses)
+      ..writeByte(9)
+      ..write(obj.retreatCost)
+      ..writeByte(10)
+      ..write(obj.convertedRetreatCost)
+      ..writeByte(11)
+      ..write(obj.set)
+      ..writeByte(12)
+      ..write(obj.number)
+      ..writeByte(13)
+      ..write(obj.artist)
+      ..writeByte(14)
+      ..write(obj.rarity)
+      ..writeByte(15)
+      ..write(obj.nationalPokedexNumbers)
+      ..writeByte(16)
+      ..write(obj.legalities)
+      ..writeByte(17)
+      ..write(obj.images)
+      ..writeByte(18)
+      ..write(obj.tcgplayer)
+      ..writeByte(19)
+      ..write(obj.cardmarket);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PokemonCardAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class AbilityAdapter extends TypeAdapter<Ability> {
+  @override
+  final int typeId = 2;
+
+  @override
+  Ability read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Ability(
+      name: fields[0] as String,
+      text: fields[1] as String,
+      abilityType: fields[2] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Ability obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.text)
+      ..writeByte(2)
+      ..write(obj.abilityType);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AbilityAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class AttackAdapter extends TypeAdapter<Attack> {
+  @override
+  final int typeId = 3;
+
+  @override
+  Attack read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Attack(
+      name: fields[0] as String,
+      cost: (fields[1] as List?)?.cast<String>(),
+      convertedEnergyCost: fields[2] as int?,
+      damage: fields[3] as String?,
+      text: fields[4] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Attack obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.cost)
+      ..writeByte(2)
+      ..write(obj.convertedEnergyCost)
+      ..writeByte(3)
+      ..write(obj.damage)
+      ..writeByte(4)
+      ..write(obj.text);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AttackAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class WeaknessAdapter extends TypeAdapter<Weakness> {
+  @override
+  final int typeId = 4;
+
+  @override
+  Weakness read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Weakness(
+      type: fields[0] as String,
+      value: fields[1] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Weakness obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.type)
+      ..writeByte(1)
+      ..write(obj.value);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WeaknessAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class CardSetAdapter extends TypeAdapter<CardSet> {
+  @override
+  final int typeId = 5;
+
+  @override
+  CardSet read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return CardSet(
+      id: fields[0] as String,
+      name: fields[1] as String,
+      series: fields[2] as String,
+      printedTotal: fields[3] as int?,
+      total: fields[4] as int?,
+      legalities: fields[5] as Legalities?,
+      ptcgoCode: fields[6] as String?,
+      releaseDate: fields[7] as String?,
+      updatedAt: fields[8] as String?,
+      images: fields[9] as CardImages?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, CardSet obj) {
+    writer
+      ..writeByte(10)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.series)
+      ..writeByte(3)
+      ..write(obj.printedTotal)
+      ..writeByte(4)
+      ..write(obj.total)
+      ..writeByte(5)
+      ..write(obj.legalities)
+      ..writeByte(6)
+      ..write(obj.ptcgoCode)
+      ..writeByte(7)
+      ..write(obj.releaseDate)
+      ..writeByte(8)
+      ..write(obj.updatedAt)
+      ..writeByte(9)
+      ..write(obj.images);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CardSetAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class LegalitiesAdapter extends TypeAdapter<Legalities> {
+  @override
+  final int typeId = 6;
+
+  @override
+  Legalities read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Legalities(
+      unlimited: fields[0] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Legalities obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.unlimited);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LegalitiesAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class CardImagesAdapter extends TypeAdapter<CardImages> {
+  @override
+  final int typeId = 7;
+
+  @override
+  CardImages read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return CardImages(
+      symbol: fields[0] as String?,
+      logo: fields[1] as String?,
+      small: fields[2] as String?,
+      large: fields[3] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, CardImages obj) {
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.symbol)
+      ..writeByte(1)
+      ..write(obj.logo)
+      ..writeByte(2)
+      ..write(obj.small)
+      ..writeByte(3)
+      ..write(obj.large);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CardImagesAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class TcgPlayerAdapter extends TypeAdapter<TcgPlayer> {
+  @override
+  final int typeId = 8;
+
+  @override
+  TcgPlayer read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return TcgPlayer(
+      url: fields[0] as String?,
+      updatedAt: fields[1] as String?,
+      prices: fields[2] as TcgPrices?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, TcgPlayer obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.url)
+      ..writeByte(1)
+      ..write(obj.updatedAt)
+      ..writeByte(2)
+      ..write(obj.prices);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TcgPlayerAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class TcgPricesAdapter extends TypeAdapter<TcgPrices> {
+  @override
+  final int typeId = 9;
+
+  @override
+  TcgPrices read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return TcgPrices(
+      normal: fields[0] as TcgPriceDetail?,
+      holofoil: fields[1] as TcgPriceDetail?,
+      reverseHolofoil: fields[2] as TcgPriceDetail?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, TcgPrices obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.normal)
+      ..writeByte(1)
+      ..write(obj.holofoil)
+      ..writeByte(2)
+      ..write(obj.reverseHolofoil);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TcgPricesAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class TcgPriceDetailAdapter extends TypeAdapter<TcgPriceDetail> {
+  @override
+  final int typeId = 10;
+
+  @override
+  TcgPriceDetail read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return TcgPriceDetail(
+      low: fields[0] as double?,
+      mid: fields[1] as double?,
+      high: fields[2] as double?,
+      market: fields[3] as double?,
+      directLow: fields[4] as double?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, TcgPriceDetail obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.low)
+      ..writeByte(1)
+      ..write(obj.mid)
+      ..writeByte(2)
+      ..write(obj.high)
+      ..writeByte(3)
+      ..write(obj.market)
+      ..writeByte(4)
+      ..write(obj.directLow);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TcgPriceDetailAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class CardMarketAdapter extends TypeAdapter<CardMarket> {
+  @override
+  final int typeId = 11;
+
+  @override
+  CardMarket read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return CardMarket(
+      url: fields[0] as String?,
+      updatedAt: fields[1] as String?,
+      prices: fields[2] as CardMarketPrices?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, CardMarket obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.url)
+      ..writeByte(1)
+      ..write(obj.updatedAt)
+      ..writeByte(2)
+      ..write(obj.prices);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CardMarketAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class CardMarketPricesAdapter extends TypeAdapter<CardMarketPrices> {
+  @override
+  final int typeId = 12;
+
+  @override
+  CardMarketPrices read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return CardMarketPrices(
+      averageSellPrice: fields[0] as double?,
+      lowPrice: fields[1] as double?,
+      trendPrice: fields[2] as double?,
+      germanProLow: fields[3] as double?,
+      suggestedPrice: fields[4] as double?,
+      reverseHoloSell: fields[5] as double?,
+      reverseHoloLow: fields[6] as double?,
+      reverseHoloTrend: fields[7] as double?,
+      lowPriceExPlus: fields[8] as double?,
+      avg1: fields[9] as double?,
+      avg7: fields[10] as double?,
+      avg30: fields[11] as double?,
+      reverseHoloAvg1: fields[12] as double?,
+      reverseHoloAvg7: fields[13] as double?,
+      reverseHoloAvg30: fields[14] as double?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, CardMarketPrices obj) {
+    writer
+      ..writeByte(15)
+      ..writeByte(0)
+      ..write(obj.averageSellPrice)
+      ..writeByte(1)
+      ..write(obj.lowPrice)
+      ..writeByte(2)
+      ..write(obj.trendPrice)
+      ..writeByte(3)
+      ..write(obj.germanProLow)
+      ..writeByte(4)
+      ..write(obj.suggestedPrice)
+      ..writeByte(5)
+      ..write(obj.reverseHoloSell)
+      ..writeByte(6)
+      ..write(obj.reverseHoloLow)
+      ..writeByte(7)
+      ..write(obj.reverseHoloTrend)
+      ..writeByte(8)
+      ..write(obj.lowPriceExPlus)
+      ..writeByte(9)
+      ..write(obj.avg1)
+      ..writeByte(10)
+      ..write(obj.avg7)
+      ..writeByte(11)
+      ..write(obj.avg30)
+      ..writeByte(12)
+      ..write(obj.reverseHoloAvg1)
+      ..writeByte(13)
+      ..write(obj.reverseHoloAvg7)
+      ..writeByte(14)
+      ..write(obj.reverseHoloAvg30);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CardMarketPricesAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 

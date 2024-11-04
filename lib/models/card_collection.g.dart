@@ -20,7 +20,7 @@ class CardCollectionAdapter extends TypeAdapter<CardCollection> {
       name: fields[0] as String,
       description: fields[1] as String,
       totCost: fields[2] as double,
-      cards: (fields[3] as List).cast<PokemonCard>(),
+      cards: (fields[3] as List?)?.cast<PokemonCard>(),
     );
   }
 
