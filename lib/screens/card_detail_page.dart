@@ -114,7 +114,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 100 + notifyBar + appBarHeight),
+              SizedBox(height: 50 + notifyBar + appBarHeight),
               AspectRatio(
                 aspectRatio: 5 / 3,
                 child: FittedBox(
@@ -135,7 +135,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
                   children: [
                     Text(
                       widget.card.name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
