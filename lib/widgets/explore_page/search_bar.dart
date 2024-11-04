@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../models/card.dart';
 import '../../screens/card_detail_page.dart';
 import '../../services/card_service.dart';
@@ -15,8 +17,7 @@ class AutoCompleteSearchWidgetExplorePage extends StatefulWidget {
       _AutoCompleteSearchWidgetStateExplorePage();
 }
 
-class _AutoCompleteSearchWidgetStateExplorePage
-    extends State<AutoCompleteSearchWidgetExplorePage> {
+class _AutoCompleteSearchWidgetStateExplorePage extends State<AutoCompleteSearchWidgetExplorePage> {
   bool _showBackArrow = false;
   final TextEditingController _controller = TextEditingController();
   final CardService _cardService = CardService();
@@ -87,7 +88,6 @@ class _AutoCompleteSearchWidgetStateExplorePage
     });
   }
 
-
   void _clearSearch() {
     setState(() {
       _controller.clear();
@@ -97,6 +97,61 @@ class _AutoCompleteSearchWidgetStateExplorePage
     });
     _subscription?.cancel();
   }
+
+  Future<void> _openCamera() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+
+    if (photo != null) {
+      final inputImage = InputImage.fromFilePath(photo.path);
+      final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+
+      try {
+        final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+        _showTextOverlay(recognizedText);
+      } catch (e) {
+        print("Errore durante il riconoscimento del testo: $e");
+      } finally {
+        textRecognizer.close();
+      }
+    }
+  }
+
+  Future<void> _showTextOverlay(RecognizedText recognizedText) async {
+    // Concatenate all the recognized text into a single string
+    String fullText = recognizedText.blocks.map((block) => block.text).join("\n\n");
+
+    // Show a dialog with the full recognized text
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Testo Riconosciuto"),
+          content: SingleChildScrollView(
+            child: Text(fullText),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Chiudi"),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _controller.text = fullText; // Fill the search bar with the recognized text
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text("Usa Testo"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -143,9 +198,12 @@ class _AutoCompleteSearchWidgetStateExplorePage
                             ),
                           ),
                         ),
+                        IconButton(
+                          icon: const Icon(Icons.camera_alt, color: Colors.white),
+                          onPressed: _openCamera,
+                        ),
                       ],
                     ),
-
                   ),
                 ),
                 if (_showCancelButton)
@@ -228,34 +286,6 @@ class _AutoCompleteSearchWidgetStateExplorePage
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.grey[600],
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          card.id,
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                        card.cardmarket?.prices?.averageSellPrice != null
-                                            ? Text(
-                                          '${card.cardmarket?.prices?.averageSellPrice}',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.grey[600],
-                                          ),
-                                        )
-                                            : const Icon(
-                                          Icons.error,
-                                          color: Colors.red,
-                                          size: 48,
-                                        ),
-                                      ],
                                     ),
                                   ),
                                 ],
