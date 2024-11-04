@@ -179,7 +179,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TabBar(
+                          const TabBar(
                             tabAlignment: TabAlignment.start,
                             isScrollable: true,
                             indicatorColor: Colors.white,
@@ -187,24 +187,24 @@ class _CardDetailPageState extends State<CardDetailPage> {
                             unselectedLabelColor: Colors.grey,
                             dividerColor: Colors.transparent,
                             tabs: [
-                              Tab(text: "Dettagli"),
-                              Tab(text: "Statistiche"),
-                              Tab(text: "Immagini 1"),
-                              Tab(text: "Immagini 2"),
-                              Tab(text: "Immagini 3"),
-                              Tab(text: "Immagini 4"),
+                              Tab(text: 'About'),
+                              Tab(text: 'Stats'),
+                              Tab(text: 'Moves'),
+                              Tab(text: 'Evolution'),
+                              Tab(text: 'Weaknesses'),
+                              Tab(text: 'Set'),
                             ],
                           ),
                           Container(
                             height: screenHeight * 0.4,
                             child: TabBarView(
                               children: [
-                                Center(child: Text('Dettagli', style: TextStyle(color: Colors.white))),
-                                Center(child: Text('Statistiche', style: TextStyle(color: Colors.white))),
-                                Center(child: Text('Immagini 1', style: TextStyle(color: Colors.white))),
-                                Center(child: Text('Immagini 2', style: TextStyle(color: Colors.white))),
-                                Center(child: Text('Immagini 3', style: TextStyle(color: Colors.white))),
-                                Center(child: Text('Immagini 4', style: TextStyle(color: Colors.white))),
+                                Center(child: Text('About', style: TextStyle(color: Colors.white))),
+                                Center(child: Text('Stats', style: TextStyle(color: Colors.white))),
+                                Center(child: Text('Moves', style: TextStyle(color: Colors.white))),
+                                Center(child: Text('Evolution', style: TextStyle(color: Colors.white))),
+                                Center(child: Text('Weaknesses', style: TextStyle(color: Colors.white))),
+                                Center(child: Text('Set', style: TextStyle(color: Colors.white))),
                               ],
                             ),
                           ),
