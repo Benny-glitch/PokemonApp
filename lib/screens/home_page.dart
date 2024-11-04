@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   bool _isFormVisible = false;
 
   final List<CardCollection> _collections = [];
+
   late Box<CardCollection> _collectionBox;
 
   @override
@@ -50,6 +51,7 @@ class _HomePageState extends State<HomePage> {
       name: name,
       description: description,
       totCost: 0,
+      cards: [],
     );
 
     setState(() {
@@ -108,6 +110,7 @@ class _HomePageState extends State<HomePage> {
                           collectionName: collection.name,
                           collectionDescription: collection.description,
                           collectionCardNumber: 0,
+                          cards: const [],
                         );
                       }).toList(),
                     ),
@@ -141,3 +144,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+

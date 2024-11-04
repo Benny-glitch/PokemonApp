@@ -6,12 +6,12 @@ import '../../services/card_service.dart';
 
 class AutoCompleteSearchWidget extends StatefulWidget {
   @override
-  _AutoCompleteSearchWidgetState createState() =>
-      _AutoCompleteSearchWidgetState();
+  _AutoCompleteSearchWidgetState createState() => _AutoCompleteSearchWidgetState();
 }
 
 class _AutoCompleteSearchWidgetState extends State<AutoCompleteSearchWidget> {
   final TextEditingController _controller = TextEditingController();
+  final CardService _cardService = CardService();
   List<PokemonCard> _suggestions = [];
   Timer? _debounce;
   bool _isSuggestionSelected = false;
@@ -39,7 +39,9 @@ class _AutoCompleteSearchWidgetState extends State<AutoCompleteSearchWidget> {
   }
 
   void _onSearchChanged() {
-    if (_isSuggestionSelected) return;
+    if (_isSuggestionSelected) {
+      return;
+    }
 
     setState(() {
       _showCancelButton = _controller.text.isNotEmpty;
@@ -63,6 +65,7 @@ class _AutoCompleteSearchWidgetState extends State<AutoCompleteSearchWidget> {
 
       if (pattern.isNotEmpty) {
         _subscription?.cancel();
+
         final stream = _cardService.searchCards(pattern);
 
         _subscription = stream.listen((cards) {
@@ -78,7 +81,9 @@ class _AutoCompleteSearchWidgetState extends State<AutoCompleteSearchWidget> {
 
   void _onSuggestionSelected(PokemonCard card) {
     _isSuggestionSelected = true;
+
     _controller.removeListener(_onSearchChanged);
+
     _subscription?.cancel();
 
     setState(() {
@@ -113,10 +118,28 @@ class _AutoCompleteSearchWidgetState extends State<AutoCompleteSearchWidget> {
               Expanded(
                 child: TextField(
                   controller: _controller,
-                  decoration: const InputDecoration(
-                    hintText: 'Search for a card...',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.search),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18.0,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Search any card...',
+                    hintStyle: TextStyle(color: Colors.grey.shade400),
+                    filled: true,
+                    fillColor: Colors.white60,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0), // Arrotonda i bordi
+                      borderSide: BorderSide.none, // Rimuove il bordo esterno
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                      borderSide: BorderSide(color: Colors.grey.shade400), // Bordo mentre è inattivo
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                      borderSide: BorderSide(color: Colors.grey.shade200, width: 2.0), // Bordo mentre è attivo
+                    ),
+                    prefixIcon: const Icon(Icons.search, color: Colors.grey),
                   ),
                 ),
               ),
@@ -125,7 +148,12 @@ class _AutoCompleteSearchWidgetState extends State<AutoCompleteSearchWidget> {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: TextButton(
                     onPressed: _clearSearch,
-                    child: Text('Cancel'),
+                    child: const Text('Cancel',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                      ),
+                    ),
                   ),
                 ),
             ],

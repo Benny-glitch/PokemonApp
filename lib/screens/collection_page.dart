@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_card_collector/widgets/collection_page/bottom_widget.dart';
 import 'package:pokemon_card_collector/widgets/collection_page/card_item.dart';
 
+import '../widgets/collection_page/search_bar.dart';
+
 
 class CollectionPage extends StatelessWidget {
   final String collectionDescription;
@@ -19,7 +21,7 @@ class CollectionPage extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: Colors.white,
@@ -135,6 +137,10 @@ class CollectionPage extends StatelessWidget {
                 Divider(
                   height: 1,
                   color: Colors.grey.shade200,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 6.0),
+                  child: AutoCompleteSearchWidget(),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(14.0),
