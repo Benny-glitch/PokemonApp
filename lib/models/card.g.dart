@@ -37,13 +37,14 @@ class PokemonCardAdapter extends TypeAdapter<PokemonCard> {
       images: fields[17] as CardImages?,
       tcgplayer: fields[18] as TcgPlayer?,
       cardmarket: fields[19] as CardMarket?,
+      cardsHeld: fields[20] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, PokemonCard obj) {
     writer
-      ..writeByte(20)
+      ..writeByte(21)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -83,7 +84,9 @@ class PokemonCardAdapter extends TypeAdapter<PokemonCard> {
       ..writeByte(18)
       ..write(obj.tcgplayer)
       ..writeByte(19)
-      ..write(obj.cardmarket);
+      ..write(obj.cardmarket)
+      ..writeByte(20)
+      ..write(obj.cardsHeld);
   }
 
   @override
@@ -648,6 +651,7 @@ PokemonCard _$PokemonCardFromJson(Map<String, dynamic> json) => PokemonCard(
       cardmarket: json['cardmarket'] == null
           ? null
           : CardMarket.fromJson(json['cardmarket'] as Map<String, dynamic>),
+      cardsHeld: (json['cardsHeald'] as num?)?.toInt() ?? -1,
     );
 
 Map<String, dynamic> _$PokemonCardToJson(PokemonCard instance) =>
@@ -672,6 +676,7 @@ Map<String, dynamic> _$PokemonCardToJson(PokemonCard instance) =>
       'images': instance.images?.toJson(),
       'tcgplayer': instance.tcgplayer?.toJson(),
       'cardmarket': instance.cardmarket?.toJson(),
+      'cardsHeald': instance.cardsHeld,
     };
 
 Ability _$AbilityFromJson(Map<String, dynamic> json) => Ability(

@@ -12,7 +12,7 @@ class CardCollection {
   final String description;
 
   @HiveField(2)
-  final double totCost;
+  double totCost;
 
   @HiveField(3)
   final List<PokemonCard> cards;

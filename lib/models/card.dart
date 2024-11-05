@@ -66,6 +66,9 @@ class PokemonCard {
   @HiveField(19)
   final CardMarket? cardmarket;
 
+  @HiveField(20)
+  int? cardsHeld;
+
   PokemonCard({
     required this.id,
     required this.name,
@@ -87,6 +90,7 @@ class PokemonCard {
     this.images,
     this.tcgplayer,
     this.cardmarket,
+    this.cardsHeld = -1,
   });
 
   factory PokemonCard.fromJson(Map<String, dynamic> json) => _$PokemonCardFromJson(json);
