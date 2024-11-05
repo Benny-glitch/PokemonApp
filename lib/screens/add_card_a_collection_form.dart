@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 import '../models/card.dart';
 import '../models/card_collection.dart';
+import '../services/hive_service.dart';
 
 class AddCardACollectionForm extends StatefulWidget {
   final VoidCallback onClose;
@@ -18,26 +19,24 @@ class AddCardACollectionForm extends StatefulWidget {
   _AddCardACollectionFormState createState() => _AddCardACollectionFormState();
 }
 
-
 class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
-  late Box<CardCollection> _collectionBox;
+  late List<CardCollection> _collectionBox;
   final Map<int, bool> _selectedCollections = {};
   bool isLoading = true;
+  late HiveService hiveService;
 
   @override
   void initState() {
     super.initState();
+    hiveService = Provider.of<HiveService>(context, listen: false);
     _openBox();
   }
 
   Future<void> _openBox() async {
     try {
-      _collectionBox = await Hive.openBox<CardCollection>('card_collections');
+      _collectionBox = hiveService.getAllCollections();
       for (int index = 0; index < _collectionBox.length; index++) {
-        final collection = _collectionBox.getAt(index);
-        if (collection != null) {
-          _selectedCollections[index] = false;
-        }
+        _selectedCollections[index] = false;
       }
     } catch (error) {
       showToast("Errore durante il caricamento dei dati.");
@@ -80,9 +79,7 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: isLoading
-                    ? const Center(
-                        child:
-                            CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : Column(
                         children: [
                           Container(
@@ -124,14 +121,16 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
     return ListView.builder(
       itemCount: _collectionBox.length,
       itemBuilder: (context, index) {
-        final collection = _collectionBox.getAt(index);
+        final collection = _collectionBox[index];
         return CheckboxListTile(
-          title: Text(collection!.name),
+          title: Text(collection.name),
           subtitle: Text(collection.description),
-          value: _selectedCollections[index],  // Usa l'indice del Box come chiave
+          value: _selectedCollections[index],
+          // Usa l'indice del Box come chiave
           onChanged: (bool? value) {
             setState(() {
-              _selectedCollections[index] = value ?? false;  // Salva lo stato usando l'indice
+              _selectedCollections[index] =
+                  value ?? false; // Salva lo stato usando l'indice
             });
           },
         );
@@ -147,23 +146,10 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
 
     if (selectedIndexes.isNotEmpty) {
       for (var index in selectedIndexes) {
-        final collection = _collectionBox.getAt(index);
-        if (collection != null) {
-          if (!collection.cards.contains(widget.card)) {
-            final updatedCards = List<PokemonCard>.from(collection.cards)
-              ..add(widget.card);
-
-            _collectionBox.putAt(
-              index,
-              CardCollection(
-                name: collection.name,
-                description: collection.description,
-                totCost: collection.totCost + (widget.card.cardmarket?.prices?.averageSellPrice ?? 0),
-                cards: updatedCards,
-              ),
-            );
-          }
-        }
+        CardCollection collection = _collectionBox[index];
+        collection.totCost +=
+            widget.card.cardmarket?.prices?.averageSellPrice ?? 0;
+        hiveService.addCardToCollection(index, widget.card);
       }
 
       showToast("Card saved to selected collections!");
@@ -172,6 +158,4 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
       showToast("Please select at least one collection.");
     }
   }
-
-
 }

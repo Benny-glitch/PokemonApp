@@ -3,7 +3,7 @@ import 'package:pokemon_card_collector/models/card.dart';
 
 class CardImage extends StatelessWidget {
   final PokemonCard card;
-  final int count;
+  final int? count;
 
   const CardImage({
     required this.card,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import '../../models/card.dart';
 import '../../screens/card_detail_page.dart';
 import '../../services/card_service.dart';
@@ -20,7 +21,7 @@ class AutoCompleteSearchWidgetExplorePage extends StatefulWidget {
 class _AutoCompleteSearchWidgetStateExplorePage extends State<AutoCompleteSearchWidgetExplorePage> {
   bool _showBackArrow = false;
   final TextEditingController _controller = TextEditingController();
-  final CardService _cardService = CardService();
+  late CardService _cardService;
   List<PokemonCard> _suggestions = [];
   Timer? _debounce;
   bool _isSuggestionSelected = false;
@@ -31,6 +32,7 @@ class _AutoCompleteSearchWidgetStateExplorePage extends State<AutoCompleteSearch
   void initState() {
     super.initState();
     _controller.addListener(_onSearchChanged);
+    _cardService = Provider.of<CardService>(context, listen: false);
   }
 
   @override

@@ -5,7 +5,7 @@ class CardItem extends StatelessWidget {
   final String cardType;
   final String cardName;
   final String price;
-  final int quantity;
+  final int? quantity;
   final AlignmentGeometry badgeAlignment;
 
   const CardItem({

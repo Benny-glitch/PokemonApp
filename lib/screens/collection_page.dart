@@ -1,10 +1,11 @@
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 import 'package:pokemon_card_collector/widgets/collection_page/bottom_widget.dart';
 import 'package:pokemon_card_collector/widgets/collection_page/card_item.dart';
 import '../widgets/collection_page/search_bar.dart';
 import '../models/card_collection.dart';
+import '../services/hive_service.dart';
 
 class CollectionPage extends StatelessWidget {
   final String collectionDescription;
@@ -20,8 +21,8 @@ class CollectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
-    return FutureBuilder(
-      future: _fetchCollection(),
+    return FutureBuilder<CardCollection>(
+      future: _fetchCollection(context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -30,7 +31,7 @@ class CollectionPage extends StatelessWidget {
         } else if (!snapshot.hasData) {
           return const Center(child: Text('No data available'));
         } else {
-          final cardCollection = snapshot.data as CardCollection;
+          final cardCollection = snapshot.data!;
 
           return Scaffold(
             backgroundColor: Colors.grey.shade50,
@@ -61,9 +62,9 @@ class CollectionPage extends StatelessWidget {
     );
   }
 
-  Future<CardCollection> _fetchCollection() async {
-    var box = await Hive.openBox<CardCollection>('card_collections');
-    return box.values.firstWhere((collection) => collection.name == collectionName);
+  Future<CardCollection> _fetchCollection(BuildContext context) async {
+    final hiveService = Provider.of<HiveService>(context, listen: false);
+    return await hiveService.getCollectionByName(collectionName);
   }
 
   AppBar _buildAppBar(BuildContext context) {
@@ -213,7 +214,7 @@ class CollectionPage extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                     Expanded(
+                                    Expanded(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
@@ -246,7 +247,7 @@ class CollectionPage extends StatelessWidget {
                                   price: card.cardmarket?.prices?.averageSellPrice != null
                                       ? '\$${card.cardmarket?.prices?.averageSellPrice?.toStringAsFixed(2)}'
                                       : 'N/A',
-                                  quantity: 0,
+                                  quantity: card.cardsHeld,
                                   badgeAlignment: Alignment.bottomLeft,
                                 );
                               },

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:provider/provider.dart';
 import 'package:pokemon_card_collector/screens/explore_page.dart';
+import 'package:pokemon_card_collector/services/hive_service.dart';
 import 'package:pokemon_card_collector/widgets/home_page/bottom_fixed_widget.dart';
 import 'package:pokemon_card_collector/widgets/home_page/card_collection_container.dart';
 import 'package:pokemon_card_collector/widgets/home_page/draggable_sheet.dart';
@@ -10,8 +12,8 @@ import 'create_collection_form.dart';
 
 class HomePage extends StatefulWidget {
   final DraggableScrollableController sheetController =
-  DraggableScrollableController();
-  final FocusNode searchFocusNode = FocusNode(); // Aggiungi un FocusNode
+      DraggableScrollableController();
+  final FocusNode searchFocusNode = FocusNode();
 
   HomePage({super.key});
 
@@ -23,20 +25,21 @@ class _HomePageState extends State<HomePage> {
   int _currentPageIndex = 0;
   bool _isFormVisible = false;
 
-  final List<CardCollection> _collections = [];
-
-  late Box<CardCollection> _collectionBox;
+  late HiveService _hiveService;
+  bool _isHiveInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _openHiveBox();
+    _hiveService = Provider.of<HiveService>(context, listen: false);
+    _initializeHive();
+
   }
 
-  Future<void> _openHiveBox() async {
-    _collectionBox = await Hive.openBox<CardCollection>('card_collections');
+  Future<void> _initializeHive() async {
+    await _hiveService.init();
     setState(() {
-      _collections.addAll(_collectionBox.values.toList());
+      _isHiveInitialized = true;
     });
   }
 
@@ -46,19 +49,16 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _addNewCollection(String name, String description) {
-    final newCollection = CardCollection(
-      name: name,
-      description: description,
-      totCost: 0,
-      cards: [],
-    );
-
-    setState(() {
-      _collections.add(newCollection);
-    });
-
-    _collectionBox.add(newCollection);
+  void _addNewCollection(String name, String description) async {
+    try {
+      final newCollection =
+          CardCollection(name: name, description: description, totCost: 0);
+      await _hiveService.addCollection(newCollection);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Errore: ${e.toString()}")),
+      );
+    }
   }
 
   void _switchPage(int index) {
@@ -91,56 +91,66 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: Colors.grey,
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          IndexedStack(
-            index: _currentPageIndex,
-            children: [
-              Stack(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 12),
-                    child: CarouselNotice(),
-                  ),
-                  MyDraggableSheet(
-                    child: Column(
-                      children: _collections.map((collection) {
-                        return CardCollectionContainer(
-                          collectionName: collection.name,
-                          collectionDescription: collection.description,
-                          collectionCardNumber: 0,
-                          cards: const [],
-                        );
-                      }).toList(),
+      body: _isHiveInitialized
+          ? Stack(
+              children: [
+                IndexedStack(
+                  index: _currentPageIndex,
+                  children: [
+                    Stack(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(top: 12),
+                          child: CarouselNotice(),
+                        ),
+                        ValueListenableBuilder(
+                          valueListenable: _hiveService.box.listenable(),
+                          builder: (context, Box<CardCollection> box, _) {
+                            final collections =
+                                _hiveService.getAllCollections();
+                            return MyDraggableSheet(
+                              child: Column(
+                                children: collections.map((collection) {
+                                  return CardCollectionContainer(
+                                    collectionName: collection.name,
+                                    collectionDescription:
+                                        collection.description,
+                                    collectionCardNumber:
+                                        collection.cards.length,
+                                    cards: collection.cards,
+                                  );
+                                }).toList(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
+                    ExplorePage(focusNode: widget.searchFocusNode),
+                  ],
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: BottomFixedWidget(
+                    onCreateCollectionTap: _toggleFormVisibility,
+                    onSwitchChange: (bool isExplore) {
+                      _switchPage(isExplore ? 0 : 1);
+                    },
                   ),
-                ],
-              ),
-              ExplorePage(focusNode: widget.searchFocusNode),
-            ],
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: BottomFixedWidget(
-              onCreateCollectionTap: _toggleFormVisibility,
-              onSwitchChange: (bool isExplore) {
-                _switchPage(isExplore ? 0 : 1);
-              },
-            ),
-          ),
-          if (_isFormVisible)
-            CreateCollectionForm(
-              onClose: _toggleFormVisibility,
-              onSave: (String name, String description) {
-                _addNewCollection(name, description);
-                _toggleFormVisibility();
-              },
-            ),
-        ],
-      ),
+                ),
+                if (_isFormVisible)
+                  CreateCollectionForm(
+                    onClose: _toggleFormVisibility,
+                    onSave: (String name, String description) {
+                      _addNewCollection(name, description);
+                      _toggleFormVisibility();
+                    },
+                  ),
+              ],
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }
-

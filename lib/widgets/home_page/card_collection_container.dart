@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:provider/provider.dart';
 import 'package:pokemon_card_collector/models/card_collection.dart';
 import 'package:pokemon_card_collector/screens/collection_page.dart';
+import 'package:pokemon_card_collector/services/hive_service.dart';
 import 'package:pokemon_card_collector/widgets/home_page/place_holder_card.dart';
 import '../../models/card.dart';
 import 'card_image.dart';
@@ -21,9 +21,9 @@ class CardCollectionContainer extends StatelessWidget {
     super.key,
   });
 
-  Future<List<PokemonCard>> _fetchCardsFromCollection() async {
-    var box = await Hive.openBox<CardCollection>('card_collections');
-    var collection = box.values.firstWhere((c) => c.name == collectionName);
+  Future<List<PokemonCard>> _fetchCardsFromCollection(BuildContext context) async {
+    final hiveService = Provider.of<HiveService>(context, listen: false);
+    final collection = await hiveService.getCollectionByName(collectionName);
     return collection != null ? collection.cards : [];
   }
 
@@ -60,73 +60,85 @@ class CardCollectionContainer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ValueListenableBuilder(
-                  valueListenable: Hive.box<CardCollection>('card_collections').listenable(),
-                  builder: (context, Box<CardCollection> box, _) {
-                    var collection = box.values.firstWhere((c) =>
-                    c.name == collectionName);
-                    int numCards = collection.cards.length;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '$collectionName ',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                FutureBuilder<CardCollection?>(
+                  future: Provider.of<HiveService>(context, listen: false)
+                      .getCollectionByName(collectionName),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasData) {
+                      final collection = snapshot.data!;
+                      final numCards = collection.cards.length;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '$collectionName ',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          '$numCards ITEMS',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
+                          Text(
+                            '$numCards ITEMS',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  }
+                        ],
+                      );
+                    } else {
+                      return const Text("Collection not found");
+                    }
+                  },
                 ),
-                ValueListenableBuilder(
-                  valueListenable: Hive.box<CardCollection>('card_collections').listenable(),
-                  builder: (context, Box<CardCollection> box, _) {
-                    var collection = box.values.firstWhere((c) => c.name == collectionName);
-                    double totCost = collection.totCost;
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        const Text(
-                          'Total value',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                FutureBuilder<CardCollection>(
+                  future: Provider.of<HiveService>(context, listen: false)
+                      .getCollectionByName(collectionName),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasData) {
+                      final collection = snapshot.data!;
+                      final totCost = collection.totCost;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Text(
+                            'Total value',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Transform.rotate(
-                              angle: -1.5708,
-                              child: const Icon(
-                                Icons.arrow_outward,
-                                color: Colors.green,
-                                size: 15,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Transform.rotate(
+                                angle: -1.5708,
+                                child: const Icon(
+                                  Icons.arrow_outward,
+                                  color: Colors.green,
+                                  size: 15,
+                                ),
                               ),
-                            ),
-                            Text(
-                              ' \$$totCost',
-                              style: const TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.black,
+                              Text(
+                                ' \$${totCost.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
+                            ],
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const Text("Value not available");
+                    }
                   },
                 ),
               ],
@@ -147,7 +159,7 @@ class CardCollectionContainer extends StatelessWidget {
                 }
 
                 return FutureBuilder<List<PokemonCard>>(
-                  future: _fetchCardsFromCollection(),
+                  future: _fetchCardsFromCollection(context),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -158,7 +170,7 @@ class CardCollectionContainer extends StatelessWidget {
                             .take(cardsToShow)
                             .map((card) => Padding(
                           padding: EdgeInsets.only(right: width * 0.020, left: width * 0.020),
-                          child: CardImage(card: card, count: 0),
+                          child: CardImage(card: card, count: card.cardsHeld),
                         ))
                             .toList(),
                       );
