@@ -4,12 +4,21 @@ import '../models/card.dart';
 import '../utils/utils.dart';
 
 class CardService {
-  final Dio _dio = WebUtil.createDio();
+  late Dio _dio;
   final String _baseUrl = Utils.baseUrl;
+
+  CardService() {
+    init();
+  }
+
+  void init() {
+    _dio = WebUtil.createDio();
+  }
 
   Stream<List<PokemonCard>> searchCards(String name) async* {
     List<PokemonCard> cards = [];
     int page = 1;
+
     while (page < 6) {
       try {
         final response = await _dio.get(
@@ -40,6 +49,7 @@ class CardService {
   Stream<List<PokemonCard>> getTopValuedCards() async* {
     List<PokemonCard> topCards = [];
     int page = 1;
+
     while (page < 6) {
       try {
         final response = await _dio.get(
