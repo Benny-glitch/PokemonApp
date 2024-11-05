@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                   ),
               ],
             )
-          : Center(child: CircularProgressIndicator()),
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 }

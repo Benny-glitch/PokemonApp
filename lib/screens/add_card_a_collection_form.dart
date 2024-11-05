@@ -146,9 +146,6 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
 
     if (selectedIndexes.isNotEmpty) {
       for (var index in selectedIndexes) {
-        CardCollection collection = _collectionBox[index];
-        collection.totCost +=
-            widget.card.cardmarket?.prices?.averageSellPrice ?? 0;
         hiveService.addCardToCollection(index, widget.card);
       }
 

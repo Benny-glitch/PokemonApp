@@ -21,7 +21,7 @@ class _CreateCollectionFormState extends State<CreateCollectionForm> {
   final TextEditingController collectionDescriptionController =
       TextEditingController();
   bool _isPriority =
-      false; // Variabile per gestire la posizione della collezione
+      false;
 
   void showToast(String message) {
     Fluttertoast.showToast(
