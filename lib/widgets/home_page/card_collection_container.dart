@@ -12,12 +12,14 @@ class CardCollectionContainer extends StatelessWidget {
   final String collectionDescription;
   final int collectionCardNumber;
   final List<PokemonCard> cards;
+  final FocusNode focusNode;
 
   const CardCollectionContainer({
     required this.collectionName,
     required this.collectionDescription,
     required this.collectionCardNumber,
     required this.cards,
+    required this.focusNode,
     super.key,
   });
 
@@ -29,6 +31,8 @@ class CardCollectionContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -72,11 +76,17 @@ class CardCollectionContainer extends StatelessWidget {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '$collectionName ',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                          SizedBox(
+                            width: 0.45 * width,
+                            child: Text(
+                              collectionName,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
                             ),
                           ),
                           Text(
@@ -182,55 +192,6 @@ class CardCollectionContainer extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16.0),
-            Row(
-              children: [
-                Expanded(
-                  flex: 14,
-                  child: TextButton(
-                    onPressed: () {
-                      // Logica per aggiungere carte
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xffFDF7F4),
-                      minimumSize: const Size.fromHeight(50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    child: const Text(
-                      'Add cards',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.deepOrange,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8.0),
-                Expanded(
-                  flex: 2,
-                  child: OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      minimumSize: const Size.fromHeight(50),
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      side: BorderSide(width: 1.5, color: Colors.grey.shade100),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.more_horiz,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),

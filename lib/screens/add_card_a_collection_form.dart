@@ -24,12 +24,20 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
   final Map<int, bool> _selectedCollections = {};
   bool isLoading = true;
   late HiveService hiveService;
+  bool _isFormVisible = false;
+
 
   @override
   void initState() {
     super.initState();
     hiveService = Provider.of<HiveService>(context, listen: false);
     _openBox();
+  }
+
+  void _toggleFormVisibility() {
+    setState(() {
+      _isFormVisible = !_isFormVisible;
+    });
   }
 
   Future<void> _openBox() async {
@@ -39,7 +47,7 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
         _selectedCollections[index] = false;
       }
     } catch (error) {
-      showToast("Errore durante il caricamento dei dati.");
+      showToast("Error loading data.");
     } finally {
       setState(() {
         isLoading = false;
@@ -56,6 +64,34 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+  }
+
+  void _addNewCollection(String name, String description) async {
+    try {
+      final newCollection =
+      CardCollection(name: name, description: description, totCost: 0);
+      await hiveService.addCollection(newCollection);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          dismissDirection: DismissDirection.up,
+          duration: const Duration(milliseconds: 1000),
+          backgroundColor: Colors.grey,
+          margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).size.height - 100,
+              left: 10,
+              right: 10
+          ),
+          behavior: SnackBarBehavior.floating,
+          content: Text(
+            'Collection name is already used',
+            style: const TextStyle(
+              fontSize: 20,
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -81,6 +117,9 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
                 child: isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
                             padding: const EdgeInsets.all(16),
@@ -97,12 +136,49 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
                             height: 1.0,
                             thickness: 0.4,
                           ),
-                          Expanded(
-                            child: _buildCollectionList(),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade50,
+                                minimumSize: const Size.fromHeight(50),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              onPressed: () {
+                              },
+                              child: const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(Icons.folder, color: Colors.orange),
+                                  Text(
+                                    "Create new collection",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  Icon(Icons.add, color: Colors.black),
+                                ],
+                              ),
+                            ),
                           ),
-                          ElevatedButton(
-                            onPressed: _saveSelectedCollections,
-                            child: const Text("Save Card"),
+                          Expanded(
+                              child: _buildCollectionList(),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade50,
+                                minimumSize: const Size.fromHeight(50),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              onPressed: _saveSelectedCollections,
+                              child: const Text("Save Card",
+                                  style: TextStyle(color: Colors.black)),
+                            ),
                           ),
                         ],
                       ),
@@ -116,25 +192,36 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
 
   Widget _buildCollectionList() {
     if (_collectionBox.isEmpty) {
-      return const Center(child: Text("No collections available"));
+      return const Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: EdgeInsets.only(top: 16.0),
+          child: Text("No collections available"),
+        ),
+      );
     }
-    return ListView.builder(
-      itemCount: _collectionBox.length,
-      itemBuilder: (context, index) {
-        final collection = _collectionBox[index];
-        return CheckboxListTile(
-          title: Text(collection.name),
-          subtitle: Text(collection.description),
-          value: _selectedCollections[index],
-          // Usa l'indice del Box come chiave
-          onChanged: (bool? value) {
-            setState(() {
-              _selectedCollections[index] =
-                  value ?? false; // Salva lo stato usando l'indice
-            });
-          },
-        );
-      },
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: ListView.builder(
+        itemCount: _collectionBox.length,
+        itemBuilder: (context, index) {
+          final collection = _collectionBox[index];
+          return CheckboxListTile(
+            title: Text(collection.name, style: TextStyle(fontSize: 20)),
+            subtitle: Text('${collection.cards.length}',
+                style: TextStyle(fontSize: 16)),
+            value: _selectedCollections[index],
+            onChanged: (bool? value) {
+              setState(() {
+                _selectedCollections[index] = value ?? false;
+              });
+            },
+            controlAffinity:
+                ListTileControlAffinity.leading,
+          );
+        },
+      ),
     );
   }
 

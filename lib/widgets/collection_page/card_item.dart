@@ -54,6 +54,13 @@ class CardItem extends StatelessWidget {
                       imageUrl,
                       width: width * 0.45,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'assets/placeholder.png',
+                          width: width * 0.45,
+                          fit: BoxFit.cover,
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -61,8 +68,8 @@ class CardItem extends StatelessWidget {
               Align(
                 alignment: badgeAlignment,
                 child: Container(
-                  padding: EdgeInsets.all(4.0),
-                  margin: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
+                  margin: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
                     color: Colors.brown,
                     borderRadius: BorderRadius.circular(8.0),

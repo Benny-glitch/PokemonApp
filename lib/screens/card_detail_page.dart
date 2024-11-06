@@ -16,7 +16,8 @@ class _CardDetailPageState extends State<CardDetailPage> {
   bool isFavorite = false;
   Color dominantColor = Colors.black;
   bool isSheetDragged = false;
-  final DraggableScrollableController _draggableController = DraggableScrollableController();
+  final DraggableScrollableController _draggableController =
+  DraggableScrollableController();
 
   final double initialChildSize = 0.45;
 
@@ -66,13 +67,14 @@ class _CardDetailPageState extends State<CardDetailPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: dominantColor,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: screenHeight * 0.1,
         title: Text(
-          widget.card.name,
+          widget.card.name ?? "N/A",
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.transparent,
@@ -134,7 +136,7 @@ class _CardDetailPageState extends State<CardDetailPage> {
                 child: Column(
                   children: [
                     Text(
-                      widget.card.name,
+                      widget.card.name ?? "N/A",
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -147,11 +149,10 @@ class _CardDetailPageState extends State<CardDetailPage> {
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     SizedBox(height: 8),
-                    if (widget.card.cardmarket?.prices?.averageSellPrice != null)
-                      Text(
-                        'Average Price: \$${widget.card.cardmarket?.prices?.averageSellPrice}',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
+                    Text(
+                      'Average Price: \$${widget.card.cardmarket?.prices?.averageSellPrice ?? "N/A"}',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
                     SizedBox(height: 16),
                   ],
                 ),
@@ -166,7 +167,9 @@ class _CardDetailPageState extends State<CardDetailPage> {
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
                 decoration: BoxDecoration(
-                  color: isSheetDragged ? Colors.black.withOpacity(0.5) : Colors.transparent,
+                  color: isSheetDragged
+                      ? Colors.black.withOpacity(0.5)
+                      : Colors.transparent,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
                 child: SingleChildScrollView(
@@ -175,36 +178,174 @@ class _CardDetailPageState extends State<CardDetailPage> {
                   child: Padding(
                     padding: EdgeInsets.all(screenWidth * 0.08),
                     child: DefaultTabController(
-                      length: 6,
+                      length: 3,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const TabBar(
-                            tabAlignment: TabAlignment.start,
+                            tabAlignment: TabAlignment.center,
                             isScrollable: true,
                             indicatorColor: Colors.white,
                             labelColor: Colors.white,
                             unselectedLabelColor: Colors.grey,
                             dividerColor: Colors.transparent,
                             tabs: [
-                              Tab(text: 'About'),
                               Tab(text: 'Stats'),
+                              Tab(text: 'Abilities'),
                               Tab(text: 'Moves'),
-                              Tab(text: 'Evolution'),
-                              Tab(text: 'Weaknesses'),
-                              Tab(text: 'Set'),
                             ],
                           ),
-                          Container(
-                            height: screenHeight * 0.4,
+                          SizedBox(
+                            height: screenHeight * 0.55,
                             child: TabBarView(
                               children: [
-                                Center(child: Text('About', style: TextStyle(color: Colors.white))),
-                                Center(child: Text('Stats', style: TextStyle(color: Colors.white))),
-                                Center(child: Text('Moves', style: TextStyle(color: Colors.white))),
-                                Center(child: Text('Evolution', style: TextStyle(color: Colors.white))),
-                                Center(child: Text('Weaknesses', style: TextStyle(color: Colors.white))),
-                                Center(child: Text('Set', style: TextStyle(color: Colors.white))),
+                                // Tab per le statistiche
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        children: List.generate(3, (index) => Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                          child: Icon(Icons.control_point_sharp, color: dominantColor, size: 24),
+                                        )),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Text(
+                                            'Card level',
+                                            style: TextStyle(color: Colors.grey.shade600, fontSize: 20),
+                                          ),
+                                          Text(
+                                            'HP',
+                                            style: TextStyle(color: Colors.grey.shade600, fontSize: 20),
+                                          ),
+                                          Text(
+                                            'Evolves from',
+                                            style: TextStyle(color: Colors.grey.shade600, fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Text(
+                                            '${widget.card.level ?? "N/A"}',
+                                            style: TextStyle(color: Colors.white, fontSize: 20),
+                                          ),
+                                          Text(
+                                            '${widget.card.hp ?? "N/A"}',
+                                            style: TextStyle(color: Colors.white, fontSize: 20),
+                                          ),
+                                          Text(
+                                            '${widget.card.evolvesFrom ?? "N/A"}',
+                                            style: TextStyle(color: Colors.white, fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Tab per le abilità
+                                Column(
+                                  children: widget.card.abilities?.map<Widget>((ability) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Icon(Icons.flash_on,
+                                              color: dominantColor,
+                                              size: 24),
+                                          SizedBox(width: 8),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  ability.name ?? "N/A",
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  ability.text ?? "N/A",
+                                                  style: TextStyle(color: Colors.white, fontSize: 16),
+                                                ),
+                                                Text(
+                                                  'Type: ${ability.abilityType ?? "N/A"}',
+                                                  style: TextStyle(
+                                                      color: Colors.grey.shade400,
+                                                      fontSize: 14),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList() ?? [],
+                                ),
+                                // Tab per le mosse
+                                Column(
+                                  children: widget.card.attacks?.map<Widget>((attack) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Icon(Icons.shield,
+                                              color: dominantColor,
+                                              size: 24),
+                                          SizedBox(width: 8),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  attack.name ?? "N/A",
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  'Energy cost: ${attack.convertedEnergyCost ?? "N/A"}',
+                                                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                                                ),
+                                                Text(
+                                                  'Damage: ${attack.damage ?? "N/A"}',
+                                                  style: TextStyle(
+                                                      color: Colors.grey.shade400,
+                                                      fontSize: 14),
+                                                ),
+                                                Text(
+                                                  '${attack.text ?? "N/A"}',
+                                                  style: TextStyle(
+                                                      color: Colors.grey.shade700,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList() ?? [],
+                                ),
                               ],
                             ),
                           ),
