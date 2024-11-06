@@ -24,7 +24,6 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
   final Map<int, bool> _selectedCollections = {};
   bool isLoading = true;
   late HiveService hiveService;
-  bool _isFormVisible = false;
 
 
   @override
@@ -32,12 +31,6 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
     super.initState();
     hiveService = Provider.of<HiveService>(context, listen: false);
     _openBox();
-  }
-
-  void _toggleFormVisibility() {
-    setState(() {
-      _isFormVisible = !_isFormVisible;
-    });
   }
 
   Future<void> _openBox() async {
@@ -66,34 +59,6 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
     );
   }
 
-  void _addNewCollection(String name, String description) async {
-    try {
-      final newCollection =
-      CardCollection(name: name, description: description, totCost: 0);
-      await hiveService.addCollection(newCollection);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          dismissDirection: DismissDirection.up,
-          duration: const Duration(milliseconds: 1000),
-          backgroundColor: Colors.grey,
-          margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).size.height - 100,
-              left: 10,
-              right: 10
-          ),
-          behavior: SnackBarBehavior.floating,
-          content: Text(
-            'Collection name is already used',
-            style: const TextStyle(
-              fontSize: 20,
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -119,69 +84,43 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
                     : Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            child: const Text(
-                              'Collection',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const Divider(
-                            color: Colors.grey,
-                            height: 1.0,
-                            thickness: 0.4,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey.shade50,
-                                minimumSize: const Size.fromHeight(50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              ),
-                              onPressed: () {
-                              },
-                              child: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Icon(Icons.folder, color: Colors.orange),
-                                  Text(
-                                    "Create new collection",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  Icon(Icons.add, color: Colors.black),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                              child: _buildCollectionList(),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey.shade50,
-                                minimumSize: const Size.fromHeight(50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              ),
-                              onPressed: _saveSelectedCollections,
-                              child: const Text("Save Card",
-                                  style: TextStyle(color: Colors.black)),
-                            ),
-                          ),
-                        ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      child: const Text(
+                        'Collection',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
+                    ),
+                    const Divider(
+                      color: Colors.grey,
+                      height: 1.0,
+                      thickness: 0.4,
+                    ),
+                    Expanded(
+                      child: _buildCollectionList(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey.shade50,
+                          minimumSize: const Size.fromHeight(50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        onPressed: _saveSelectedCollections,
+                        child: const Text("Save Card",
+                            style: TextStyle(color: Colors.black)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -218,7 +157,7 @@ class _AddCardACollectionFormState extends State<AddCardACollectionForm> {
               });
             },
             controlAffinity:
-                ListTileControlAffinity.leading,
+            ListTileControlAffinity.leading,
           );
         },
       ),
