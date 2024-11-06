@@ -20,8 +20,6 @@ class _CreateCollectionFormState extends State<CreateCollectionForm> {
       TextEditingController();
   final TextEditingController collectionDescriptionController =
       TextEditingController();
-  bool _isPriority =
-      false;
 
   void showToast(String message) {
     Fluttertoast.showToast(
@@ -138,38 +136,6 @@ class _CreateCollectionFormState extends State<CreateCollectionForm> {
                                 textAlign: TextAlign.left,
                               ),
                               const SizedBox(height: 20),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade50,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Show this collection first",
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey.shade700,
-                                        ),
-                                      ),
-                                      Switch(
-                                        value: _isPriority,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _isPriority = value;
-                                          });
-                                        },
-                                        activeColor: Colors.orangeAccent.shade700,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
                             ],
                           ),
                         ),

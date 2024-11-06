@@ -56,7 +56,23 @@ class _HomePageState extends State<HomePage> {
       await _hiveService.addCollection(newCollection);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Errore: ${e.toString()}")),
+        SnackBar(
+          dismissDirection: DismissDirection.up,
+          duration: const Duration(milliseconds: 1000),
+          backgroundColor: Colors.red,
+          margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).size.height - 100,
+              left: 10,
+              right: 10
+          ),
+          behavior: SnackBarBehavior.floating,
+          content: Text(
+            'Collection name is already used',
+            style: const TextStyle(
+              fontSize: 20,
+            ),
+          ),
+        ),
       );
     }
   }
@@ -73,84 +89,85 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        title: const Padding(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-          child: Text(
-            'PokeDesk',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-              fontSize: 28,
+        appBar: AppBar(
+          surfaceTintColor: Colors.black,
+          title: const Padding(
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Text(
+              'PokeDesk',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: 28,
+              ),
             ),
           ),
+          centerTitle: true,
+          backgroundColor: Colors.black,
         ),
-        centerTitle: false,
-        backgroundColor: Colors.white,
-      ),
-      backgroundColor: Colors.grey,
-      resizeToAvoidBottomInset: false,
-      body: _isHiveInitialized
-          ? Stack(
-              children: [
-                IndexedStack(
-                  index: _currentPageIndex,
-                  children: [
-                    Stack(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(top: 12),
-                          child: CarouselNotice(),
-                        ),
-                        ValueListenableBuilder(
-                          valueListenable: _hiveService.box.listenable(),
-                          builder: (context, Box<CardCollection> box, _) {
-                            final collections =
-                                _hiveService.getAllCollections();
-                            return MyDraggableSheet(
-                              child: Column(
-                                children: collections.map((collection) {
-                                  return CardCollectionContainer(
-                                    collectionName: collection.name,
-                                    collectionDescription:
-                                        collection.description,
-                                    collectionCardNumber:
-                                        collection.cards.length,
-                                    cards: collection.cards,
-                                  );
-                                }).toList(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+        backgroundColor: Colors.black,
+        resizeToAvoidBottomInset: false,
+        body: _isHiveInitialized
+            ? Stack(
+                children: [
+                  IndexedStack(
+                    index: _currentPageIndex,
+                    children: [
+                      Stack(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(top: 12),
+                            child: CarouselNotice(),
+                          ),
+                          ValueListenableBuilder(
+                            valueListenable: _hiveService.box.listenable(),
+                            builder: (context, Box<CardCollection> box, _) {
+                              final collections =
+                                  _hiveService.getAllCollections();
+                              return MyDraggableSheet(
+                                child: Column(
+                                  children: collections.map((collection) {
+                                    return CardCollectionContainer(
+                                      collectionName: collection.name,
+                                      collectionDescription:
+                                          collection.description,
+                                      collectionCardNumber:
+                                          collection.cards.length,
+                                      cards: collection.cards,
+                                      focusNode: widget.searchFocusNode,
+                                    );
+                                  }).toList(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      ExplorePage(focusNode: widget.searchFocusNode),
+                    ],
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: BottomFixedWidget(
+                      onCreateCollectionTap: _toggleFormVisibility,
+                      onSwitchChange: (bool isExplore) {
+                        _switchPage(isExplore ? 0 : 1);
+                      },
                     ),
-                    ExplorePage(focusNode: widget.searchFocusNode),
-                  ],
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: BottomFixedWidget(
-                    onCreateCollectionTap: _toggleFormVisibility,
-                    onSwitchChange: (bool isExplore) {
-                      _switchPage(isExplore ? 0 : 1);
-                    },
                   ),
-                ),
-                if (_isFormVisible)
-                  CreateCollectionForm(
-                    onClose: _toggleFormVisibility,
-                    onSave: (String name, String description) {
-                      _addNewCollection(name, description);
-                      _toggleFormVisibility();
-                    },
-                  ),
-              ],
-            )
-          : const Center(child: CircularProgressIndicator()),
+                  if (_isFormVisible)
+                    CreateCollectionForm(
+                      onClose: _toggleFormVisibility,
+                      onSave: (String name, String description) {
+                        _addNewCollection(name, description);
+                        _toggleFormVisibility();
+                      },
+                    ),
+                ],
+              )
+            : const Center(child: CircularProgressIndicator()),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:pokemon_card_collector/models/card.dart';
 import 'package:pokemon_card_collector/screens/home_page.dart';
 import 'package:pokemon_card_collector/services/card_service.dart';
 import 'package:pokemon_card_collector/services/hive_service.dart';
+import 'package:pokemon_card_collector/services/sets_services.dart';
 import 'package:provider/provider.dart';
 
 import 'models/card_collection.dart';
@@ -30,7 +31,8 @@ Future<void> main() async {
   runApp(MultiProvider(
     providers: [
       Provider<CardService>(create: (_) => CardService()),
-      Provider<HiveService>(create: (_) => HiveService(),)
+      Provider<HiveService>(create: (_) => HiveService()),
+      Provider<SetsServices>(create: (_) => SetsServices()),
     ],
     child: MyApp(),
   ),);
