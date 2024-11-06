@@ -22,14 +22,36 @@ class TopCardsCarousel extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              'Error: ${snapshot.error}',
-              style: TextStyle(color: Colors.white),
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error,
+                  color: Colors.red,
+                  size: 120,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'An internet error as occurred. Please try again.',
+                  style: TextStyle(color: Colors.red, fontSize: 18),
+                ),
+              ],
             ),
           );
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No top cards available.'));
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'No top cards available.',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+          );
         } else {
           final topCards = snapshot.data!;
           return Column(
@@ -75,7 +97,8 @@ class TopCardsCarousel extends StatelessWidget {
                                         card.images?.large ??
                                             'https://via.placeholder.com/150',
                                         fit: BoxFit.contain,
-                                        errorBuilder: (context, error, stackTrace) =>
+                                        errorBuilder: (context, error,
+                                            stackTrace) =>
                                         const Icon(
                                           Icons.error,
                                           color: Colors.red,
