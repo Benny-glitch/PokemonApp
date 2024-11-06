@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import '../api/web_utils.dart';
 import '../models/card.dart';
 import '../utils/utils.dart';
@@ -15,21 +16,33 @@ class CardService {
     _dio = WebUtil.createDio();
   }
 
-  Stream<List<PokemonCard>> searchCards(String name) async* {
+  Stream<List<PokemonCard>> searchCards(String name, RangeValues priceRange, List<String> types, List<String> setName) async* {
     List<PokemonCard> cards = [];
     int page = 1;
+    const int maxPages = 5;
 
-    while (page < 6) {
+    while (page <= maxPages) {
       try {
-        final response = await _dio.get(
-          '$_baseUrl/cards',
-          queryParameters: {
-            'q': 'name:$name*',
-            'pageSize': 5,
-            'page': page,
-          },
-        );
+        final query = <String, String>{'q': 'name:$name*'};
 
+        if (priceRange.start != 0 || priceRange.end != 10000) {
+          query['q'] = '${query['q']} cardmarket.prices.averageSellPrice:[${priceRange.start.toStringAsFixed(0)} TO ${priceRange.end.toStringAsFixed(0)}]';
+        }
+
+        if (setName.isNotEmpty) {
+          query['q'] = '${query['q']} (${setName.map((type) => 'set.name:"$type"').join(" OR ")})';
+        }
+
+        if (types.isNotEmpty) {
+          query['q'] = '${query['q']} (${types.map((type) => 'types:$type').join(" OR ")})';
+        }
+
+        print(query);
+
+        query['pageSize'] = '5';
+        query['page'] = '$page';
+
+        final response = await _dio.get('$_baseUrl/cards', queryParameters: query);
         if (response.statusCode == 200) {
           for (var card in response.data['data']) {
             cards.add(PokemonCard.fromJson(card as Map<String, dynamic>));
@@ -46,6 +59,7 @@ class CardService {
     }
   }
 
+
   Stream<List<PokemonCard>> getTopValuedCards() async* {
     List<PokemonCard> topCards = [];
     int page = 1;
@@ -60,6 +74,7 @@ class CardService {
             'page': page,
           },
         );
+
 
         if (response.statusCode == 200) {
           for (var card in response.data['data']) {

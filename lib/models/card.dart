@@ -22,52 +22,59 @@ class PokemonCard {
   final String? hp;
 
   @HiveField(5)
-  final List<String>? types;
+  final String? level;
 
   @HiveField(6)
-  final List<Ability>? abilities;
+  final List<String>? types;
 
   @HiveField(7)
-  final List<Attack>? attacks;
+  final List<Ability>? abilities;
 
   @HiveField(8)
-  final List<Weakness>? weaknesses;
+  final List<Attack>? attacks;
 
   @HiveField(9)
-  final List<String>? retreatCost;
+  final List<Weakness>? weaknesses;
 
   @HiveField(10)
-  final int? convertedRetreatCost;
+  final List<String>? retreatCost;
 
   @HiveField(11)
-  final CardSet? set;
+  final int? convertedRetreatCost;
 
   @HiveField(12)
-  final String? number;
+  final CardSet? set;
 
   @HiveField(13)
-  final String? artist;
+  final String? number;
 
   @HiveField(14)
-  final String? rarity;
+  final String? artist;
 
   @HiveField(15)
-  final List<int>? nationalPokedexNumbers;
+  final String? rarity;
 
   @HiveField(16)
-  final Legalities? legalities;
+  final List<int>? nationalPokedexNumbers;
 
   @HiveField(17)
-  final CardImages? images;
+  final Legalities? legalities;
 
   @HiveField(18)
-  final TcgPlayer? tcgplayer;
+  final CardImages? images;
 
   @HiveField(19)
-  final CardMarket? cardmarket;
+  final TcgPlayer? tcgplayer;
 
   @HiveField(20)
+  final CardMarket? cardmarket;
+
+  @HiveField(21)
   int? cardsHeld;
+
+  @HiveField(22)
+  final String? evolvesFrom;
+
 
   PokemonCard({
     required this.id,
@@ -75,6 +82,7 @@ class PokemonCard {
     required this.supertype,
     this.subtypes,
     this.hp,
+    this.level,
     this.types,
     this.abilities,
     this.attacks,
@@ -90,6 +98,7 @@ class PokemonCard {
     this.images,
     this.tcgplayer,
     this.cardmarket,
+    this.evolvesFrom,
     this.cardsHeld = -1,
   });
 

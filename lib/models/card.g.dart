@@ -22,29 +22,31 @@ class PokemonCardAdapter extends TypeAdapter<PokemonCard> {
       supertype: fields[2] as String,
       subtypes: (fields[3] as List?)?.cast<String>(),
       hp: fields[4] as String?,
-      types: (fields[5] as List?)?.cast<String>(),
-      abilities: (fields[6] as List?)?.cast<Ability>(),
-      attacks: (fields[7] as List?)?.cast<Attack>(),
-      weaknesses: (fields[8] as List?)?.cast<Weakness>(),
-      retreatCost: (fields[9] as List?)?.cast<String>(),
-      convertedRetreatCost: fields[10] as int?,
-      set: fields[11] as CardSet?,
-      number: fields[12] as String?,
-      artist: fields[13] as String?,
-      rarity: fields[14] as String?,
-      nationalPokedexNumbers: (fields[15] as List?)?.cast<int>(),
-      legalities: fields[16] as Legalities?,
-      images: fields[17] as CardImages?,
-      tcgplayer: fields[18] as TcgPlayer?,
-      cardmarket: fields[19] as CardMarket?,
-      cardsHeld: fields[20] as int?,
+      level: fields[5] as String?,
+      types: (fields[6] as List?)?.cast<String>(),
+      abilities: (fields[7] as List?)?.cast<Ability>(),
+      attacks: (fields[8] as List?)?.cast<Attack>(),
+      weaknesses: (fields[9] as List?)?.cast<Weakness>(),
+      retreatCost: (fields[10] as List?)?.cast<String>(),
+      convertedRetreatCost: fields[11] as int?,
+      set: fields[12] as CardSet?,
+      number: fields[13] as String?,
+      artist: fields[14] as String?,
+      rarity: fields[15] as String?,
+      nationalPokedexNumbers: (fields[16] as List?)?.cast<int>(),
+      legalities: fields[17] as Legalities?,
+      images: fields[18] as CardImages?,
+      tcgplayer: fields[19] as TcgPlayer?,
+      cardmarket: fields[20] as CardMarket?,
+      evolvesFrom: fields[22] as String?,
+      cardsHeld: fields[21] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, PokemonCard obj) {
     writer
-      ..writeByte(21)
+      ..writeByte(23)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -56,37 +58,41 @@ class PokemonCardAdapter extends TypeAdapter<PokemonCard> {
       ..writeByte(4)
       ..write(obj.hp)
       ..writeByte(5)
-      ..write(obj.types)
+      ..write(obj.level)
       ..writeByte(6)
-      ..write(obj.abilities)
+      ..write(obj.types)
       ..writeByte(7)
-      ..write(obj.attacks)
+      ..write(obj.abilities)
       ..writeByte(8)
-      ..write(obj.weaknesses)
+      ..write(obj.attacks)
       ..writeByte(9)
-      ..write(obj.retreatCost)
+      ..write(obj.weaknesses)
       ..writeByte(10)
-      ..write(obj.convertedRetreatCost)
+      ..write(obj.retreatCost)
       ..writeByte(11)
-      ..write(obj.set)
+      ..write(obj.convertedRetreatCost)
       ..writeByte(12)
-      ..write(obj.number)
+      ..write(obj.set)
       ..writeByte(13)
-      ..write(obj.artist)
+      ..write(obj.number)
       ..writeByte(14)
-      ..write(obj.rarity)
+      ..write(obj.artist)
       ..writeByte(15)
-      ..write(obj.nationalPokedexNumbers)
+      ..write(obj.rarity)
       ..writeByte(16)
-      ..write(obj.legalities)
+      ..write(obj.nationalPokedexNumbers)
       ..writeByte(17)
-      ..write(obj.images)
+      ..write(obj.legalities)
       ..writeByte(18)
-      ..write(obj.tcgplayer)
+      ..write(obj.images)
       ..writeByte(19)
-      ..write(obj.cardmarket)
+      ..write(obj.tcgplayer)
       ..writeByte(20)
-      ..write(obj.cardsHeld);
+      ..write(obj.cardmarket)
+      ..writeByte(21)
+      ..write(obj.cardsHeld)
+      ..writeByte(22)
+      ..write(obj.evolvesFrom);
   }
 
   @override
@@ -615,6 +621,7 @@ PokemonCard _$PokemonCardFromJson(Map<String, dynamic> json) => PokemonCard(
           ?.map((e) => e as String)
           .toList(),
       hp: json['hp'] as String?,
+      level: json['level'] as String?,
       types:
           (json['types'] as List<dynamic>?)?.map((e) => e as String).toList(),
       abilities: (json['abilities'] as List<dynamic>?)
@@ -651,7 +658,8 @@ PokemonCard _$PokemonCardFromJson(Map<String, dynamic> json) => PokemonCard(
       cardmarket: json['cardmarket'] == null
           ? null
           : CardMarket.fromJson(json['cardmarket'] as Map<String, dynamic>),
-      cardsHeld: (json['cardsHeald'] as num?)?.toInt() ?? -1,
+      evolvesFrom: json['evolvesFrom'] as String?,
+      cardsHeld: (json['cardsHeld'] as num?)?.toInt() ?? -1,
     );
 
 Map<String, dynamic> _$PokemonCardToJson(PokemonCard instance) =>
@@ -661,6 +669,7 @@ Map<String, dynamic> _$PokemonCardToJson(PokemonCard instance) =>
       'supertype': instance.supertype,
       'subtypes': instance.subtypes,
       'hp': instance.hp,
+      'level': instance.level,
       'types': instance.types,
       'abilities': instance.abilities?.map((e) => e.toJson()).toList(),
       'attacks': instance.attacks?.map((e) => e.toJson()).toList(),
@@ -676,7 +685,8 @@ Map<String, dynamic> _$PokemonCardToJson(PokemonCard instance) =>
       'images': instance.images?.toJson(),
       'tcgplayer': instance.tcgplayer?.toJson(),
       'cardmarket': instance.cardmarket?.toJson(),
-      'cardsHeald': instance.cardsHeld,
+      'cardsHeld': instance.cardsHeld,
+      'evolvesFrom': instance.evolvesFrom,
     };
 
 Ability _$AbilityFromJson(Map<String, dynamic> json) => Ability(
