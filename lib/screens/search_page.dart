@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_card_collector/widgets/explore_page/search_bar.dart';
 
 class SearchPage extends StatefulWidget {
+  final List<String> selectedSetName;
+  final RangeValues rangeValues;
+  final List<String> selectedTypes;
+
+  const SearchPage(
+      {super.key,
+      required this.rangeValues,
+      required this.selectedSetName,
+      required this.selectedTypes});
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -37,7 +47,12 @@ class _SearchPageState extends State<SearchPage> {
               child: Material(
                 color: Colors.transparent,
                 child: AutoCompleteSearchWidgetExplorePage(
-                    appBarHeight: appBarHeight, height: height),
+                  appBarHeight: appBarHeight,
+                  height: height,
+                  selectedSetName: widget.selectedSetName,
+                  selectedTypes: widget.selectedTypes,
+                  rangeValues: widget.rangeValues,
+                ),
               ),
             ),
           ],

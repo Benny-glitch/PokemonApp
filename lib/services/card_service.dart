@@ -37,8 +37,6 @@ class CardService {
           query['q'] = '${query['q']} (${types.map((type) => 'types:$type').join(" OR ")})';
         }
 
-        print(query);
-
         query['pageSize'] = '5';
         query['page'] = '$page';
 

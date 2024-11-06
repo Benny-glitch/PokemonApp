@@ -10,15 +10,26 @@ import '../../services/card_service.dart';
 class AutoCompleteSearchWidgetExplorePage extends StatefulWidget {
   final double appBarHeight;
   final double height;
+  final List<String> selectedSetName;
+  final RangeValues rangeValues;
+  final List<String> selectedTypes;
 
-  const AutoCompleteSearchWidgetExplorePage({Key? key, required this.appBarHeight, required this.height}) : super(key: key);
+  const AutoCompleteSearchWidgetExplorePage(
+      {Key? key,
+      required this.appBarHeight,
+      required this.height,
+      required this.rangeValues,
+      required this.selectedSetName,
+      required this.selectedTypes})
+      : super(key: key);
 
   @override
   _AutoCompleteSearchWidgetStateExplorePage createState() =>
       _AutoCompleteSearchWidgetStateExplorePage();
 }
 
-class _AutoCompleteSearchWidgetStateExplorePage extends State<AutoCompleteSearchWidgetExplorePage> {
+class _AutoCompleteSearchWidgetStateExplorePage
+    extends State<AutoCompleteSearchWidgetExplorePage> {
   bool _showBackArrow = false;
   final TextEditingController _controller = TextEditingController();
   late CardService _cardService;
@@ -64,7 +75,7 @@ class _AutoCompleteSearchWidgetStateExplorePage extends State<AutoCompleteSearch
       final pattern = _controller.text;
       if (pattern.isNotEmpty) {
         _subscription?.cancel();
-        _subscription = _cardService.searchCards(pattern).listen((cards) {
+        _subscription = _cardService.searchCards(pattern, widget.rangeValues, widget.selectedTypes, widget.selectedSetName).listen((cards) {
           if (!_isSuggestionSelected) {
             setState(() => _suggestions = cards);
           }
@@ -106,10 +117,12 @@ class _AutoCompleteSearchWidgetStateExplorePage extends State<AutoCompleteSearch
 
     if (photo != null) {
       final inputImage = InputImage.fromFilePath(photo.path);
-      final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+      final textRecognizer =
+          TextRecognizer(script: TextRecognitionScript.latin);
 
       try {
-        final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+        final RecognizedText recognizedText =
+            await textRecognizer.processImage(inputImage);
         _showTextOverlay(recognizedText);
       } catch (e) {
         print("Errore durante il riconoscimento del testo: $e");
@@ -120,40 +133,77 @@ class _AutoCompleteSearchWidgetStateExplorePage extends State<AutoCompleteSearch
   }
 
   Future<void> _showTextOverlay(RecognizedText recognizedText) async {
-    // Concatenate all the recognized text into a single string
-    String fullText = recognizedText.blocks.map((block) => block.text).join("\n\n");
+    // Ottieni tutto il testo e separa le parole
+    String fullText = recognizedText.blocks.map((block) => block.text).join(" ");
+    List<String> selectedWords = []; // Traccia delle parole selezionate
 
-    // Show a dialog with the full recognized text
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Testo Riconosciuto"),
-          content: SingleChildScrollView(
-            child: Text(fullText),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Chiudi"),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _controller.text = fullText; // Fill the search bar with the recognized text
-                });
-                Navigator.of(context).pop();
-              },
-              child: const Text("Usa Testo"),
-            ),
-          ],
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text("Testo Riconosciuto"),
+              content: SingleChildScrollView(
+                child: Wrap(
+                  spacing: 8.0,
+                  runSpacing: 8.0,
+                  children: fullText.split(' ').map((word) {
+                    bool isSelected = selectedWords.contains(word);
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          // Seleziona o deseleziona la parola
+                          if (isSelected) {
+                            selectedWords.remove(word);
+                          } else {
+                            selectedWords.add(word);
+                          }
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 5.0),
+                        decoration: BoxDecoration(
+                          color: isSelected ? Colors.blue : Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Text(
+                          word,
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Chiudi"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      // Imposta il testo del campo di ricerca con le parole selezionate
+                      _controller.text = selectedWords.join(' ');
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Usa Testo"),
+                ),
+              ],
+            );
+          },
         );
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -172,12 +222,14 @@ class _AutoCompleteSearchWidgetStateExplorePage extends State<AutoCompleteSearch
                       color: Colors.grey.shade900,
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 4.5),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 13.0, vertical: 4.5),
                     child: Row(
                       children: [
                         if (_showBackArrow)
                           IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                            icon: const Icon(Icons.arrow_back,
+                                color: Colors.white),
                             onPressed: () {
                               Navigator.pop(context);
                             },
@@ -201,7 +253,8 @@ class _AutoCompleteSearchWidgetStateExplorePage extends State<AutoCompleteSearch
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.camera_alt, color: Colors.white),
+                          icon:
+                              const Icon(Icons.camera_alt, color: Colors.white),
                           onPressed: _openCamera,
                         ),
                       ],
@@ -224,10 +277,17 @@ class _AutoCompleteSearchWidgetStateExplorePage extends State<AutoCompleteSearch
           ),
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            height: _suggestions.isEmpty ? 0 : MediaQuery.of(context).size.height - searchBarHeight - widget.height - widget.appBarHeight,
+            height: _suggestions.isEmpty
+                ? 0
+                : MediaQuery.of(context).size.height -
+                    searchBarHeight -
+                    widget.height -
+                    widget.appBarHeight,
             curve: Curves.easeInOut,
             child: ListView.builder(
-              physics: _suggestions.isEmpty ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics(),
+              physics: _suggestions.isEmpty
+                  ? const NeverScrollableScrollPhysics()
+                  : const AlwaysScrollableScrollPhysics(),
               itemCount: _suggestions.length,
               itemBuilder: (context, index) {
                 final card = _suggestions[index];
