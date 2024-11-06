@@ -62,4 +62,35 @@ class HiveService {
     }
   }
 
+  Future<void> updateCollectionName(String oldName, String newName) async {
+    if (await collectionNameExists(newName)) {
+      throw Exception("A collection with this new name already exists.");
+    }
+
+    final collectionKey = _collectionBox.keys.firstWhere(
+          (key) => _collectionBox.get(key)?.name == oldName,
+      orElse: () => throw Exception("Collection not found"),
+    );
+
+    final collection = _collectionBox.get(collectionKey);
+    if (collection != null) {
+      final updatedCollection = CardCollection(
+        name: newName,
+        description: collection.description,
+        totCost: collection.totCost,
+        cards: collection.cards,
+      );
+
+      await _collectionBox.put(collectionKey, updatedCollection);
+    }
+  }
+
+  Future<void> deleteCollectionByName(String collectionName) async {
+    final collectionKey = _collectionBox.keys.firstWhere(
+          (key) => _collectionBox.get(key)?.name == collectionName,
+      orElse: () => throw Exception("Collection not found"),
+    );
+    await _collectionBox.delete(collectionKey);
+  }
+
 }
